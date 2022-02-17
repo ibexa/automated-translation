@@ -46,8 +46,8 @@
             "Ibexa\\AutomatedTranslation\\": "src/lib/",
             "Ibexa\\Bundle\\AutomatedTranslation\\": "src/bundle/",
             "Ibexa\\Contracts\\AutomatedTranslation\\": "src/contracts/",
-            "EzSystems\\EzPlatformAutomatedTranslation\\": "lib",
-            "EzSystems\\EzPlatformAutomatedTranslationBundle\\": "bundle"
+            "EzSystems\\EzPlatformAutomatedTranslation\\": "src/lib/",
+            "EzSystems\\EzPlatformAutomatedTranslationBundle\\": "src/bundle/"
         }
     },
     "autoload-dev": {
