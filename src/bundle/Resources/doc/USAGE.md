@@ -5,7 +5,7 @@
 ## Basic Configuration
 
 ```yaml
-# app/config/config.yml
+# config/packages/ibexa.yaml
 
 ibexa_automated_translation:
     system:

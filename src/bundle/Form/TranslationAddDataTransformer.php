@@ -19,18 +19,16 @@ class TranslationAddDataTransformer implements DataTransformerInterface
      *
      * @return \Ibexa\Bundle\AutomatedTranslation\Form\Data\TranslationAddData
      */
-    public function transform($value)
+    public function transform($value): BaseTranslationAddData
     {
         /* @var BaseTranslationAddData $value */
         return new TranslationAddData($value->getLocation(), $value->getLanguage(), $value->getBaseLanguage());
     }
 
     /**
-     * @param mixed $value
-     *
-     * @return mixed
+     * @param \Ibexa\Bundle\AutomatedTranslation\Form\Data\TranslationAddData $value
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): TranslationAddData
     {
         return $value;
     }

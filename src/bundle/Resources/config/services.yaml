@@ -6,10 +6,10 @@ services:
 
     _instanceof:
         Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface:
-            tags: [ 'ibexa.automated_translation.field_encoder' ]
+            tags: [ ibexa.automated_translation.field_encoder ]
 
         Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface:
-            tags: [ 'ibexa.automated_translation.block_attribute_encoder' ]
+            tags: [ ibexa.automated_translation.block_attribute_encoder ]
 
     # field encoder
     Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder: ~
@@ -26,7 +26,7 @@ services:
     # field encoder manager
     Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager:
         arguments:
-            $fieldEncoders: !tagged_iterator 'ibexa.automated_translation.field_encoder'
+            $fieldEncoders: !tagged_iterator ibexa.automated_translation.field_encoder
 
     # block attribute
     Ibexa\AutomatedTranslation\Encoder\BlockAttribute\TextBlockAttributeEncoder: ~
@@ -38,7 +38,7 @@ services:
     # block attribute encoder manager
     Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager:
         arguments:
-            $blockAttributeEncoders: !tagged_iterator 'ibexa.automated_translation.block_attribute_encoder'
+            $blockAttributeEncoders: !tagged_iterator ibexa.automated_translation.block_attribute_encoder
 
     # RichText encoder
     Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder:
@@ -53,14 +53,12 @@ services:
 
     Ibexa\AutomatedTranslation\Client\:
         resource: '../../../lib/Client'
-        tags: ['ibexa.automated_translation.client']
+        tags: [ ibexa.automated_translation.client ]
 
     Ibexa\AutomatedTranslation\ClientProvider:
         arguments: [!tagged ibexa.automated_translation.client]
 
-    Ibexa\Bundle\AutomatedTranslation\Command\:
-        resource: '../../Command/*'
-        tags: ['console.command']
+    Ibexa\Bundle\AutomatedTranslation\Command\TranslateContentCommand: ~
 
     Ibexa\Bundle\AutomatedTranslation\Form\Extension\TranslationAddType:
         tags:

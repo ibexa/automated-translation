@@ -1,7 +1,6 @@
 /vendor
 /.php_cs.cache
 package-lock.json
-.DS_Store
 .phpunit.result.cache
 .php-cs-fixer.cache
 composer.lock

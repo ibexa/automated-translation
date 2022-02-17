@@ -43,19 +43,19 @@
     },
     "autoload": {
         "psr-4": {
-            "EzSystems\\EzPlatformAutomatedTranslation\\": "lib",
-            "EzSystems\\EzPlatformAutomatedTranslationBundle\\": "bundle",
             "Ibexa\\AutomatedTranslation\\": "src/lib/",
             "Ibexa\\Bundle\\AutomatedTranslation\\": "src/bundle/",
-            "Ibexa\\Contracts\\AutomatedTranslation\\": "src/contracts/"
+            "Ibexa\\Contracts\\AutomatedTranslation\\": "src/contracts/",
+            "EzSystems\\EzPlatformAutomatedTranslation\\": "lib",
+            "EzSystems\\EzPlatformAutomatedTranslationBundle\\": "bundle"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "EzSystems\\EzPlatformAutomatedTranslation\\Tests\\": "tests/lib/",
-            "EzSystems\\EzPlatformAutomatedTranslationBundle\\Tests\\": "tests/bundle/",
             "Ibexa\\Tests\\AutomatedTranslation\\": "tests/lib/",
-            "Ibexa\\Tests\\Bundle\\AutomatedTranslation\\": "tests/bundle/"
+            "Ibexa\\Tests\\Bundle\\AutomatedTranslation\\": "tests/bundle/",
+            "EzSystems\\EzPlatformAutomatedTranslation\\Tests\\": "tests/lib/",
+            "EzSystems\\EzPlatformAutomatedTranslationBundle\\Tests\\": "tests/bundle/"
         }
     },
     "scripts": {

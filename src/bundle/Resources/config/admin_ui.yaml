@@ -1,6 +1,5 @@
 services:
-
-    ibexa.automated_translate.adminui.component.javascripts:
+    ibexa.automated_translation.adminui.component.javascripts:
          parent: Ibexa\AdminUi\Component\TwigComponent
          public: false
          arguments:

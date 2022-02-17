@@ -26,9 +26,13 @@ class IbexaAutomatedTranslationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        if (empty($config['system'])) {
+            return;
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         // always needed because of Bundle extension.
-        $loader->load('services_override.yml');
+        $loader->load('services_override.yaml');
 
         $container->registerForAutoconfiguration(FieldEncoderInterface::class)
             ->addTag('ibexa.automated_translation.field_encoder');
@@ -36,17 +40,13 @@ class IbexaAutomatedTranslationExtension extends Extension
         $container->registerForAutoconfiguration(BlockAttributeEncoderInterface::class)
             ->addTag('ibexa.automated_translation.block_attribute_encoder');
 
-        if (empty($config['system'])) {
-            return;
-        }
-
         if (!$this->hasConfiguredClients($config, $container)) {
             return;
         }
 
-        $loader->load('adminui.yml');
-        $loader->load('default_settings.yml');
-        $loader->load('services.yml');
+        $loader->load('admin_ui.yaml');
+        $loader->load('default_settings.yaml');
+        $loader->load('services.yaml');
 
         $processor = new ConfigurationProcessor($container, $this->getAlias());
         $processor->mapSetting('configurations', $config);

@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class IbexaAutomatedTranslationExtensionTest extends TestCase
 {
+    /**
+     * @return array{array{array{system: array{default: array{configurations: array{}}}}, bool}}
+     */
     public function clientConfigurationDataProvider(): array
     {
         return [

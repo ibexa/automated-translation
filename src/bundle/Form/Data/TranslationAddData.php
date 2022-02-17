@@ -15,13 +15,13 @@ class TranslationAddData extends BaseTranslationAddData
     /** @var string|bool */
     protected $translatorAlias;
 
-    /** @return mixed */
+    /** @return string|bool */
     public function getTranslatorAlias()
     {
         return $this->translatorAlias;
     }
 
-    /** @param mixed $translatorAlias */
+    /** @param string|bool $translatorAlias */
     public function setTranslatorAlias($translatorAlias): void
     {
         $this->translatorAlias = $translatorAlias;

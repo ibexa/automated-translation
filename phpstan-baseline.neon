@@ -1,0 +1,57 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to protected property Ibexa\\\\AdminUi\\\\Form\\\\Data\\\\ContentTranslationData\\:\\:\\$content\\.$#"
+			count: 4
+			path: src/bundle/Form/Extension/ContentEditType.php
+
+		-
+			message: "#^Cannot access property \\$identifier on Ibexa\\\\Contracts\\\\Core\\\\Repository\\\\Values\\\\ContentType\\\\FieldDefinition\\|null\\.$#"
+			count: 2
+			path: src/bundle/Form/Extension/ContentEditType.php
+
+		-
+			message: "#^Call to method getBlockDefinition\\(\\) on an unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Call to method getPage\\(\\) on an unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
+			count: 2
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value not found\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:decode\\(\\) should return Ibexa\\\\Core\\\\FieldType\\\\Value but returns Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$previousFieldValue contains unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$value contains unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Parameter \\$blockDefinitionFactory of method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:__construct\\(\\) has invalid type Ibexa\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Property Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:\\$blockDefinitionFactory has unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory as its type\\.$#"
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
+			message: "#^Parameter \\#1 \\$function of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Ibexa\\\\Bundle\\\\AutomatedTranslation\\\\DependencyInjection\\\\IbexaAutomatedTranslationExtension, mixed\\} given\\.$#"
+			count: 1
+			path: tests/bundle/DependencyInjection/IbexaAutomatedTranslationExtensionTest.php
+
