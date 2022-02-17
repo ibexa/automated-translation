@@ -1,19 +1,6 @@
-# Ibexa Automated Translation Bundle
+# Ibexa Automated Translation
 
-## Features
-
-[Features](src/bundle/Resources/doc/FEATURES.md)
-
-## Usage and installation instructions
-
-[Usage](src/bundle/Resources/doc/USAGE.md)
-
-[Installation](src/bundle/Resources/doc/INSTALL.md)
-
-Changelog
-------------------
-
-[Changelog](src/bundle/Resources/doc/CHANGELOG.md)
+Learn more about [Ibexa DXP](https://www.ibexa.co/products).
 
 ## COPYRIGHT
 Copyright (C) 1999-2021 Ibexa AS (formerly eZ Systems AS). All rights reserved.
