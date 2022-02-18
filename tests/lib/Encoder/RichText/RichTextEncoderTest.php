@@ -29,10 +29,10 @@ class RichTextEncoderTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('getParameter')
             ->withConsecutive(
-                [$this->equalTo('non_translatable_tags'), $this->equalTo('ibexa.automated_translation')],
-                [$this->equalTo('non_translatable_self_closed_tags'), $this->equalTo('ibexa.automated_translation')],
-                [$this->equalTo('non_translatable_characters'), $this->equalTo('ibexa.automated_translation')],
-                [$this->equalTo('non_valid_attribute_tags'), $this->equalTo('ibexa.automated_translation')]
+                [$this->equalTo('non_translatable_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')],
+                [$this->equalTo('non_translatable_self_closed_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')],
+                [$this->equalTo('non_translatable_characters'), $this->equalTo('ibexa.automated_translation.site_access.config')],
+                [$this->equalTo('non_valid_attribute_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')]
             )
             ->willReturnOnConsecutiveCalls([], [], [], []);
     }

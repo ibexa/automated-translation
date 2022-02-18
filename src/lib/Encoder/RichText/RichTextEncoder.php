@@ -54,22 +54,22 @@ final class RichTextEncoder
     ) {
         $tags = $configResolver->getParameter(
             'non_translatable_tags',
-            'ibexa.automated_translation'
+            'ibexa.automated_translation.site_access.config'
         );
 
         $selfClosedTags = $configResolver->getParameter(
             'non_translatable_self_closed_tags',
-            'ibexa.automated_translation'
+            'ibexa.automated_translation.site_access.config'
         );
 
         $chars = $configResolver->getParameter(
             'non_translatable_characters',
-            'ibexa.automated_translation'
+            'ibexa.automated_translation.site_access.config'
         );
 
         $attributes = $configResolver->getParameter(
             'non_valid_attribute_tags',
-            'ibexa.automated_translation'
+            'ibexa.automated_translation.site_access.config'
         );
 
         $this->nonTranslatableTags = ['ezvalue', 'ezconfig', 'ezembed'] + $tags;

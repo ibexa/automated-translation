@@ -1,6 +1,6 @@
 parameters:
-    ibexa.automated_translation.default.configurations: ~
-    ibexa.automated_translation.default.non_translatable_characters: []
-    ibexa.automated_translation.default.non_translatable_tags: []
-    ibexa.automated_translation.default.non_translatable_self_closed_tags: []
-    ibexa.automated_translation.default.non_valid_attribute_tags: []
+    ibexa.automated_translation.site_access.config.default.configurations: ~
+    ibexa.automated_translation.site_access.config.default.non_translatable_characters: []
+    ibexa.automated_translation.site_access.config.default.non_translatable_tags: []
+    ibexa.automated_translation.site_access.config.default.non_translatable_self_closed_tags: []
+    ibexa.automated_translation.site_access.config.default.non_valid_attribute_tags: []
