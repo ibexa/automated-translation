@@ -75,6 +75,10 @@ class ContentEditType extends AbstractTypeExtension
                 );
                 foreach ($data->content->getFieldsByLanguage() as $field) {
                     $fieldDef = $contentType->getFieldDefinition($field->fieldDefIdentifier);
+                    if (null === $fieldDef) {
+                        continue;
+                    }
+
                     $fieldValue = $translatedFields[$fieldDef->identifier] ??
                                   $data->content->getFieldValue($fieldDef->identifier, $fromLanguageCode);
                     $data->addFieldData(

@@ -6,11 +6,6 @@ parameters:
 			path: src/bundle/Form/Extension/ContentEditType.php
 
 		-
-			message: "#^Cannot access property \\$identifier on Ibexa\\\\Contracts\\\\Core\\\\Repository\\\\Values\\\\ContentType\\\\FieldDefinition\\|null\\.$#"
-			count: 2
-			path: src/bundle/Form/Extension/ContentEditType.php
-
-		-
 			message: "#^Call to method getBlockDefinition\\(\\) on an unknown class Ibexa\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory\\.$#"
 			count: 1
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
