@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\AutomatedTranslation\Form\Extension;
 
 use Ibexa\AdminUi\Form\Type\Language\LanguageCreateType as BaseLanguageCreateType;
+use JMS\TranslationBundle\Annotation\Desc;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,10 +39,10 @@ class LanguageCreateType extends AbstractTypeExtension
             'languageCode',
             ChoiceType::class,
             [
-                'label' => /* @Desc("Language code") */
-                    'ibexa.language.create.language_code',
+                'label' => /* @Desc("Language code") */ 'ibexa.language.create.language_code',
                 'required' => false,
                 'choices' => array_combine($this->localeList, $this->localeList),
+                'translation_domain' => 'ibexa_automated_translation',
             ]
         );
     }

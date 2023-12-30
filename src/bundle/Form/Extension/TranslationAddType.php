@@ -61,6 +61,7 @@ class TranslationAddType extends AbstractTypeExtension
                         'value' => $client->getServiceAlias(),
                         'data' => true,
                         'required' => false,
+                        'disabled' => true,
                     ]
                 );
             $builder->addModelTransformer(new TranslationAddDataTransformer());
@@ -92,6 +93,7 @@ class TranslationAddType extends AbstractTypeExtension
 
                         return '';
                     },
+                    'disabled' => true,
                 ]
             );
         $builder->addModelTransformer(new TranslationAddDataTransformer());

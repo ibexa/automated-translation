@@ -13,10 +13,11 @@ use Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEn
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class IbexaAutomatedTranslationExtension extends Extension
+class IbexaAutomatedTranslationExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -70,6 +71,27 @@ class IbexaAutomatedTranslationExtension extends Extension
                 return !empty($container->resolveEnvPlaceholders($value, true));
             });
         }));
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $this->prependJMSTranslation($container);
+    }
+
+    private function prependJMSTranslation(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('jms_translation', [
+            'configs' => [
+                'ibexa_automated_translation' => [
+                    'dirs' => [
+                        __DIR__ . '/../../',
+                    ],
+                    'excluded_dirs' => ['Behat'],
+                    'output_dir' => __DIR__ . '/../Resources/translations/',
+                    'output_format' => 'xliff',
+                ],
+            ],
+        ]);
     }
 }
 

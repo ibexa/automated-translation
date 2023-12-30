@@ -1,0 +1,18 @@
+{% trans_default_domain 'ibexa_automated_translation' %}
+
+{% if form.vars.autotranslated_data is defined %}
+    <div class="ibexa-automated-translation-services-container">
+        {% if form.translatorAlias.vars.choices is defined %}
+            {# that is a select - then multiple providers #}
+            <label class="ibexa-label form-label">
+                {{ 'tab.translations.remote.translation.service'|trans()|desc('Use automatic translation') }}
+            </label>
+            {{ form_widget(form.translatorAlias) }}
+        {% else %}
+            {# that is a checkbox - then one provider #}
+            {{ form_widget(form.translatorAlias, {
+                label: 'tab.translations.remote.translation.service.with'|trans({"%alias%": form.translatorAlias.vars.label })|desc('Use automatic translation with %alias%'),
+            }) }}
+        {% endif %}
+    </div>
+{% endif %}

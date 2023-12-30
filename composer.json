@@ -12,6 +12,11 @@
     "type": "ibexa-bundle",
     "authors": [
         {
+            "name": "Ibexa AS",
+            "homepage": "https://ibexa.co",
+            "email": "dev-team@ibexa.co"
+        },
+        {
             "name": "Novactive",
             "homepage": "http://www.novactive.us",
             "email": "s.morel@novactive.com"

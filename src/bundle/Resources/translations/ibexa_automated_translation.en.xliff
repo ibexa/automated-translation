@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="not.available">
+    <header>
+      <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
+      <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
+    </header>
+    <body>
+      <trans-unit id="6cd2ce682c3546de9a86ff3390701d81e46a99e2" resname="ibexa.language.create.language_code">
+        <source>Language code</source>
+        <target state="new">Language code</target>
+        <note>key: ibexa.language.create.language_code</note>
+      </trans-unit>
+      <trans-unit id="e7de62309ac728e1694040c140243cf918c33e60" resname="tab.translations.remote.translation.service">
+        <source>Use automatic translation</source>
+        <target state="new">Use automatic translation</target>
+        <note>key: tab.translations.remote.translation.service</note>
+      </trans-unit>
+      <trans-unit id="9c26b8f27857a53af3b30f1c0b0963d344fe2996" resname="tab.translations.remote.translation.service.with">
+        <source>Use automatic translation with %alias%</source>
+        <target state="new">Use automatic translation with %alias%</target>
+        <note>key: tab.translations.remote.translation.service.with</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
