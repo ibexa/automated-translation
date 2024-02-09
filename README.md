@@ -20,3 +20,14 @@ AND
 B - GNU General Public License, version 2
 Grants an copyleft open source license with ABSOLUTELY NO WARRANTY. For the full GPL license text, please see:
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+
+## Installation and usage instructions
+
+[Installation](doc/INSTALL.md)
+
+[Usage](doc/USAGE.md)
+
+## Features
+
+[Features](doc/FEATURES.md)
