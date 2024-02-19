@@ -1,57 +1,61 @@
-jQuery(function () {
-    let $ = jQuery;
-    let $form = $("form[name=add-translation]", "#add-translation-modal");
-    let $container = $(".ibexa-automated-translation-services-container:first", $form);
-    let $error = $(".ibexa-automated-translation-error", $container);
+(function (global, doc) {
+    const modal = doc.querySelector('#add-translation-modal');
+    const form = modal.querySelector('form[name="add-translation"]');
+    const container = form.querySelector('.ibexa-automated-translation-services-container');
+    const error = container.querySelector('.ibexa-automated-translation-error');
+    const sourceLabel = container.querySelector('.ibexa-field-edit--ezboolean .ibexa-data-source__label');
 
-    $form.click(function () {
-        $error.addClass("invisible");
-    });
+    const toggleClass = (event) => {
+        const target = event.target;
+        const input = target.querySelector('input[type="checkbox"]');
 
-    $container.find(".ibexa-field-edit--ezboolean .ibexa-data-source__label").click(function () {
-        let $input = $(this).find("input[type='checkbox']");
-        let isChecked = $input.attr('checked') === 'checked';
-
-        if (isChecked) {
-            $input.removeAttr('checked');
-            $(this).removeClass('is-checked');
+        if (input.checked) {
+            input.removeAttribute('checked');
+            target.classList.remove('is-checked');
         } else {
-            $(this).addClass('is-checked');
-            $input.attr('checked', 'checked');
+            target.classList.add('is-checked');
+            input.setAttribute('checked', true);
         }
-        return false;
-    });
+    };
 
-    $container.find(".ibexa-data-source__label.is-checked").each(() => {
-        $form.find('.ibexa-btn--create-translation').prop("disabled", false);
-    });
+    const submitForm = () => {
+        const targetLang = form.querySelector('select[name="add-translation[base_language]"]').value;
+        const sourceLang = form.querySelector('select[name="add-translation[language]"]').value;
+        const { languagesMapping } = container.dataset;
+        const serviceSelector = form.querySelector('#add-translation_translatorAlias');
+        const serviceAlias = serviceSelector.value;
 
-    $container.find(".ibexa-dropdown__source select option:selected").each(() => {
-        $form.find('.ibexa-btn--create-translation').prop("disabled", false);
-    });
-
-    $("form[name=add-translation]").submit(function () {
-        let targetLang = $("select[name=add-translation\\[language\\]]").val();
-        let sourceLang = $("select[name=add-translation\\[base_language\\]]").val();
-        let mapping = $container.data('languages-mapping');
-        let $serviceSelector = $("#add-translation_translatorAlias");
-        let serviceAlias = $serviceSelector.val();
-        if ($serviceSelector.is("[type=checkbox]") && !$serviceSelector.is(":checked")) {
-            serviceAlias = '';
-        }
-
-        if (!serviceAlias.length) {
+        if ((serviceSelector.type === 'checkbox' && !serviceSelector.checked) || !serviceAlias.length) {
             return true;
         }
 
-        let translationAvailable = (typeof sourceLang === 'undefined' || -1 !== $.inArray(sourceLang, mapping[serviceAlias])) && (-1 !== $.inArray(targetLang, mapping[serviceAlias]));
-        if (false === translationAvailable) {
-            $error.removeClass("invisible");
-            if ($container.find(".ibexa-field-edit--ezboolean .ibexa-data-source__label").hasClass('is-checked')) {
-                $container.find(".ibexa-field-edit--ezboolean .ibexa-data-source__label").click();
+        const translationAvailable =
+            (typeof sourceLang === 'undefined' || sourceLang.indexOf(languagesMapping[serviceAlias]) !== -1) &&
+            targetLang.indexOf(targetLang, languagesMapping[serviceAlias]) !== -1;
+
+        if (!translationAvailable) {
+            error?.classList.remove('invisible');
+
+            if (sourceLabel.classList.contains('is-checked')) {
+                sourceLabel.click();
+
                 return false;
             }
         }
+
         return true;
+    };
+
+    form.addEventListener('click', () => error?.classList.add('invisible'));
+    sourceLabel?.addEventListener('click', toggleClass);
+
+    container.querySelectorAll('.ibexa-data-source__label.is-checked').forEach(() => {
+        form.querySelector('.ibexa-btn--create-translation').removeAttribute('disabled');
     });
-});
+
+    container.querySelectorAll('.ibexa-dropdown__source select option:checked').forEach(() => {
+        form.querySelector('.ibexa-btn--create-translation').removeAttribute('disabled');
+    });
+
+    form.addEventListener('submnit', submitForm);
+})(window, window.document);
