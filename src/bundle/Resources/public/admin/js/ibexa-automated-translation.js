@@ -5,9 +5,8 @@
     const error = container.querySelector('.ibexa-automated-translation-error');
     const sourceLabel = container.querySelector('.ibexa-field-edit--ezboolean .ibexa-data-source__label');
 
-    const toggleClass = (event) => {
-        const target = event.target;
-        const input = target.querySelector('input[type="checkbox"]');
+    const toggleClass = ({ target }) => {
+        const input = target.querySelector('.ibexa-input--checkbox');
 
         if (input.checked) {
             input.removeAttribute('checked');
@@ -28,10 +27,8 @@
         if ((serviceSelector.type === 'checkbox' && !serviceSelector.checked) || !serviceAlias.length) {
             return true;
         }
-
-        const translationAvailable =
-            (typeof sourceLang === 'undefined' || sourceLang.indexOf(languagesMapping[serviceAlias]) !== -1) &&
-            targetLang.indexOf(targetLang, languagesMapping[serviceAlias]) !== -1;
+        const serviceLang = languagesMapping[serviceAlias];
+        const translationAvailable = (typeof sourceLang === 'undefined'  || sourceLang.includes(serviceLang)) && targetLang.includes(serviceLang);
 
         if (!translationAvailable) {
             error?.classList.remove('invisible');
@@ -46,16 +43,17 @@
         return true;
     };
 
-    form.addEventListener('click', () => error?.classList.add('invisible'));
-    sourceLabel?.addEventListener('click', toggleClass);
+    form.addEventListener('click', () => error?.classList.add('invisible'), false);
+    sourceLabel?.addEventListener('click', toggleClass, false);
 
-    container.querySelectorAll('.ibexa-data-source__label.is-checked').forEach(() => {
+    if (container.querySelector('.ibexa-data-source__label.is-checked')) {
         form.querySelector('.ibexa-btn--create-translation').removeAttribute('disabled');
-    });
+    }
 
-    container.querySelectorAll('.ibexa-dropdown__source select option:checked').forEach(() => {
+    if (container.querySelector('.ibexa-data-source__label.is-checked')
+        || container.querySelector('.ibexa-dropdown__source select option:checked')) {
         form.querySelector('.ibexa-btn--create-translation').removeAttribute('disabled');
-    });
+    }
 
-    form.addEventListener('submnit', submitForm);
+    form.addEventListener('submnit', submitForm, false);
 })(window, window.document);
