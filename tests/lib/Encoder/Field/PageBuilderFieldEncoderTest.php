@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 
-use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager;
 use Ibexa\AutomatedTranslation\Encoder\Field\PageBuilderFieldEncoder;
+use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Attribute;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\BlockValue;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Page;
@@ -29,11 +29,12 @@ final class PageBuilderFieldEncoderTest extends TestCase
 
     private BlockDefinitionFactory $blockDefinitionFactoryMock;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $this->blockAttributeEncoderManagerMock = $this->createMock(BlockAttributeEncoderManager::class);
         $this->blockDefinitionFactoryMock = $this->createMock(BlockDefinitionFactory::class);
     }
-    
+
     public function testEncode(): void
     {
         $this->blockDefinitionFactoryMock
@@ -56,7 +57,7 @@ final class PageBuilderFieldEncoderTest extends TestCase
 
         self::assertEquals($this->getEncodeResult(), $result);
     }
-    
+
     public function testCanEncode(): void
     {
         $field = $this->getLandingPageField();
@@ -67,7 +68,7 @@ final class PageBuilderFieldEncoderTest extends TestCase
 
         self::assertTrue($subject->canEncode($field));
     }
-    
+
     public function testDecode(): void
     {
         $this->blockAttributeEncoderManagerMock
@@ -90,7 +91,7 @@ final class PageBuilderFieldEncoderTest extends TestCase
         self::assertInstanceOf(Value::class, $result);
         self::assertEquals(new Value($this->getPage()), $result);
     }
-    
+
     public function testCanDecode(): void
     {
         $field = $this->getLandingPageField();

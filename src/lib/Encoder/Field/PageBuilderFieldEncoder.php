@@ -103,6 +103,10 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $page = clone $previousFieldValue->getPage();
         $decodeArray = $encoder->decode($data, XmlEncoder::FORMAT);
 
+        if (!is_array($decodeArray)) {
+            return new Value($page);
+        }
+
         foreach ($decodeArray as $blockId => $xmlValue) {
             $block = $page->getBlockById((string) $blockId);
             $block->setName($xmlValue['name']);
