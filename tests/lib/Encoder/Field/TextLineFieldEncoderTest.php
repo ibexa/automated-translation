@@ -25,7 +25,7 @@ class TextLineFieldEncoderTest extends TestCase
         $subject = new TextLineFieldEncoder();
         $result = $subject->encode($field);
 
-        $this->assertEquals('Some text 1', $result);
+        self::assertEquals('Some text 1', $result);
     }
 
     public function testDecode(): void
@@ -38,7 +38,7 @@ class TextLineFieldEncoderTest extends TestCase
         $subject = new TextLineFieldEncoder();
         $result = $subject->decode('Some text 1', $field->value);
 
-        $this->assertInstanceOf(TextLine\Value::class, $result);
-        $this->assertEquals(new TextLine\Value('Some text 1'), $result);
+        self::assertInstanceOf(TextLine\Value::class, $result);
+        self::assertEquals(new TextLine\Value('Some text 1'), $result);
     }
 }

@@ -64,6 +64,7 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
 
     /**
      * @param array<mixed> $input
+     *
      * @dataProvider clientConfigurationDataProvider
      */
     public function testHasConfiguredClients(array $input, bool $expected): void
@@ -73,7 +74,7 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
             ->getMock();
 
         $containerMock
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('resolveEnvPlaceholders')
             ->withConsecutive(['value1'], ['value2'], ['ENV_TEST1'])
             ->willReturnOnConsecutiveCalls(['value1'], ['value2'], ['test1']);
@@ -89,6 +90,6 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
             IbexaAutomatedTranslationExtension::class
         ), ['hasConfiguredClients', [$input, $containerMock]]);
 
-        $this->assertEquals($expected, $hasConfiguredClientsResult);
+        self::assertEquals($expected, $hasConfiguredClientsResult);
     }
 }

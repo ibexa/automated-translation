@@ -52,7 +52,7 @@ class EncoderTest extends TestCase
 
 XML;
 
-        $this->assertEquals($expected, $encodeResult);
+        self::assertEquals($expected, $encodeResult);
     }
 
     public function testEncodeTwoTextline(): void
@@ -80,13 +80,13 @@ XML;
             ->getMockForAbstractClass();
 
         $contentType
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('getFieldDefinition')
             ->withConsecutive(['field_1_textline'], ['field_2_textline'])
             ->willReturnOnConsecutiveCalls($fieldDefinition, $fieldDefinition);
 
         $contentTypeServiceMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('loadContentType')
             ->with(123)
             ->willReturn($contentType);
@@ -111,10 +111,10 @@ XML;
         ]);
 
         $fieldEncoderManagerMock
-            ->expects($this->exactly(2))
+            ->expects(self::exactly(2))
             ->method('encode')
             ->withAnyParameters()
-            ->will($this->returnValue('encoded'));
+            ->will(self::returnValue('encoded'));
 
         $subject = new Encoder(
             $contentTypeServiceMock,
@@ -128,7 +128,7 @@ XML;
 <response><field_1_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">encoded</field_1_textline><field_2_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">encoded</field_2_textline></response>
 ';
 
-        $this->assertEquals($expectedEncodeResult, $encodeResult);
+        self::assertEquals($expectedEncodeResult, $encodeResult);
     }
 
     /**

@@ -23,7 +23,7 @@ class RichTextFieldEncoderTest extends TestCase
             ->getMock();
 
         $richTextEncoderMock
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('encode')
             ->withAnyParameters()
             ->willReturn('Some text 1');
@@ -38,7 +38,7 @@ class RichTextFieldEncoderTest extends TestCase
         $subject = new RichTextFieldEncoder($richTextEncoderMock);
         $result = $subject->encode($field);
 
-        $this->assertEquals('Some text 1', $result);
+        self::assertEquals('Some text 1', $result);
     }
 
     public function testDecode(): void
@@ -50,7 +50,7 @@ class RichTextFieldEncoderTest extends TestCase
             ->getMock();
 
         $richTextEncoderMock
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('decode')
             ->withAnyParameters()
             ->willReturn($xml1);
@@ -66,8 +66,8 @@ class RichTextFieldEncoderTest extends TestCase
             $field->value
         );
 
-        $this->assertInstanceOf(RichText\Value::class, $result);
-        $this->assertEquals(new RichText\Value($xml1), $result);
+        self::assertInstanceOf(RichText\Value::class, $result);
+        self::assertEquals(new RichText\Value($xml1), $result);
     }
 
     protected function getFixture(string $name): string

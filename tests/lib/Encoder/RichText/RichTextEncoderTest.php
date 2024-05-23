@@ -26,13 +26,13 @@ class RichTextEncoderTest extends TestCase
             ->getMock();
 
         $this->configResolver
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('getParameter')
             ->withConsecutive(
-                [$this->equalTo('non_translatable_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')],
-                [$this->equalTo('non_translatable_self_closed_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')],
-                [$this->equalTo('non_translatable_characters'), $this->equalTo('ibexa.automated_translation.site_access.config')],
-                [$this->equalTo('non_valid_attribute_tags'), $this->equalTo('ibexa.automated_translation.site_access.config')]
+                [self::equalTo('non_translatable_tags'), self::equalTo('ibexa.automated_translation.site_access.config')],
+                [self::equalTo('non_translatable_self_closed_tags'), self::equalTo('ibexa.automated_translation.site_access.config')],
+                [self::equalTo('non_translatable_characters'), self::equalTo('ibexa.automated_translation.site_access.config')],
+                [self::equalTo('non_valid_attribute_tags'), self::equalTo('ibexa.automated_translation.site_access.config')]
             )
             ->willReturnOnConsecutiveCalls([], [], [], []);
     }
@@ -47,11 +47,11 @@ class RichTextEncoderTest extends TestCase
 
         $expected = $this->getFixture('testEncodeTwoRichText_field1_richtext_encoded.xml');
 
-        $this->assertEquals($expected, $encodeResult . "\n");
+        self::assertEquals($expected, $encodeResult . "\n");
 
         $decodeResult = $subject->decode($encodeResult);
 
-        $this->assertEquals($xml1, $decodeResult);
+        self::assertEquals($xml1, $decodeResult);
     }
 
     public function testEncodeAndDecodeRichtextEmbeded(): void
@@ -64,11 +64,11 @@ class RichTextEncoderTest extends TestCase
 
         $expected = $this->getFixture('testEncodeTwoRichTextWithTwoEzembed_field2_richtext_encoded.xml');
 
-        $this->assertEquals($expected, $encodeResult . "\n");
+        self::assertEquals($expected, $encodeResult . "\n");
 
         $decodeResult = $subject->decode($encodeResult);
 
-        $this->assertEquals($xml1, $decodeResult);
+        self::assertEquals($xml1, $decodeResult);
     }
 
     public function testEncodeAndDecodeRichtextExtended(): void
@@ -81,13 +81,13 @@ class RichTextEncoderTest extends TestCase
 
         $expected = $this->getFixture('testEncodeRichText_input_encoded.xml');
 
-        $this->assertEquals(trim($expected), trim($encodeResult));
+        self::assertEquals(trim($expected), trim($encodeResult));
 
         $decodeResult = $subject->decode($encodeResult);
 
         $decodeResult = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $decodeResult;
 
-        $this->assertEquals($xml1, $decodeResult);
+        self::assertEquals($xml1, $decodeResult);
     }
 
     protected function getFixture(string $name): string
