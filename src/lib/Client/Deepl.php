@@ -59,7 +59,7 @@ class Deepl implements ClientInterface
                 'timeout' => 5.0,
             ]
         );
-        $response = $http->post('/v1/translate', ['form_params' => $parameters]);
+        $response = $http->post('/v2/translate', ['form_params' => $parameters]);
         // May use the native json method from guzzle
         $json = json_decode($response->getBody()->getContents());
 
