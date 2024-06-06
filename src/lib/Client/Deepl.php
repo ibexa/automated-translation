@@ -88,5 +88,5 @@ class Deepl implements ClientInterface
     /**
      * List of available code https://www.deepl.com/api.html.
      */
-    private const LANGUAGE_CODES = ['EN', 'DE', 'FR', 'ES', 'IT', 'NL', 'PL','JP'];
+    private const LANGUAGE_CODES = ['EN', 'DE', 'FR', 'ES', 'IT', 'NL', 'PL', 'JA'];
 }
