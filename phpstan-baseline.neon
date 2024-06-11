@@ -1,6 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Offset 'system' on array in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: src/bundle/DependencyInjection/IbexaAutomatedTranslationExtension.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(mixed\\)\\: \\(array\\|null\\) given\\.$#"
+			count: 1
+			path: src/bundle/DependencyInjection/IbexaAutomatedTranslationExtension.php
+
+		-
 			message: "#^Access to protected property Ibexa\\\\AdminUi\\\\Form\\\\Data\\\\ContentTranslationData\\:\\:\\$content\\.$#"
 			count: 4
 			path: src/bundle/Form/Extension/ContentEditType.php
@@ -17,12 +27,12 @@ parameters:
 
 		-
 			message: "#^Instantiated class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value not found\\.$#"
-			count: 1
+			count: 2
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
 			message: "#^Method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:decode\\(\\) should return Ibexa\\\\Core\\\\FieldType\\\\Value but returns Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
-			count: 1
+			count: 2
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
@@ -49,4 +59,184 @@ parameters:
 			message: "#^Parameter \\#1 \\$function of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Ibexa\\\\Bundle\\\\AutomatedTranslation\\\\DependencyInjection\\\\IbexaAutomatedTranslationExtension, mixed\\} given\\.$#"
 			count: 1
 			path: tests/bundle/DependencyInjection/IbexaAutomatedTranslationExtensionTest.php
+
+		-
+			message: "#^Call to an undefined method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\BlockAttribute\\\\BlockAttributeEncoderManager\\:\\:expects\\(\\)\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to an undefined method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\BlockAttribute\\\\BlockAttributeEncoderManager\\:\\:method\\(\\)\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method method\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setAttributes\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setCategory\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setCategory\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setConfigurationTemplate\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setConstraints\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setIdentifier\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setIdentifier\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setName\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setName\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setOptions\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setThumbnail\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setType\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setValue\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setViews\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Call to method setVisible\\(\\) on an unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\Attribute not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\BlockValue not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\Page not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\Zone not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value not found\\.$#"
+			count: 2
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockAttributeDefinition not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Instantiated class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition not found\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Method Ibexa\\\\Tests\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoderTest\\:\\:createZone\\(\\) has invalid return type Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\Zone\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Method Ibexa\\\\Tests\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoderTest\\:\\:getBlockDefinition\\(\\) has invalid return type Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinition\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Method Ibexa\\\\Tests\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoderTest\\:\\:getPage\\(\\) has invalid return type Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Model\\\\Page\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:canDecode\\(\\) expects string, class\\-string\\|false given\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$blockDefinitionFactory of class Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder constructor expects Ibexa\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory, Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory given\\.$#"
+			count: 4
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Property Ibexa\\\\Tests\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoderTest\\:\\:\\$blockDefinitionFactoryMock has unknown class Ibexa\\\\Contracts\\\\FieldTypePage\\\\FieldType\\\\Page\\\\Block\\\\Definition\\\\BlockDefinitionFactory as its type\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Return type of call to method PHPUnit\\\\Framework\\\\TestCase\\:\\:createMock\\(\\) contains unresolvable type\\.$#"
+			count: 1
+			path: tests/lib/Encoder/Field/PageBuilderFieldEncoderTest.php
+
+		-
+			message: "#^Return type of call to method PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\<Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\RichText\\\\RichTextEncoder\\>\\:\\:getMock\\(\\) contains unresolvable type\\.$#"
+			count: 2
+			path: tests/lib/Encoder/Field/RichTextFieldEncoderTest.php
+
+		-
+			message: "#^Return type of call to method PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\<Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\FieldEncoderManager\\>\\:\\:getMock\\(\\) contains unresolvable type\\.$#"
+			count: 2
+			path: tests/lib/EncoderTest.php
 

@@ -8,5 +8,5 @@ parameters:
     paths:
         - src
         - tests
-    checkGenericClassInNonGenericObjectType: false
-
+    ignoreErrors:
+        - identifier: missingType.generics
