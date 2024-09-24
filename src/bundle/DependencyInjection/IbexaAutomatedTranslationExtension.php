@@ -30,10 +30,6 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
             return;
         }
 
-        if (empty($config['system'])) {
-            return;
-        }
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         // always needed because of Bundle extension.
         $loader->load('services_override.yaml');

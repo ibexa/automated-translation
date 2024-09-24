@@ -54,6 +54,11 @@ services:
     Ibexa\AutomatedTranslation\Client\:
         resource: '../../../lib/Client'
         tags: [ ibexa.automated_translation.client ]
+    
+    Ibexa\AutomatedTranslation\Client\Deepl:
+        arguments:
+            $languageMap: '%ibexa.automated_translation.deepl.language_map%'
+        tags: [ ibexa.automated_translation.client ]
 
     Ibexa\AutomatedTranslation\ClientProvider:
         arguments: [!tagged ibexa.automated_translation.client]
