@@ -20,3 +20,41 @@ AND
 B - GNU General Public License, version 2
 Grants an copyleft open source license with ABSOLUTELY NO WARRANTY. For the full GPL license text, please see:
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+# Installation
+
+Run `composer require ibexa/automated-translation` to install the bundle and its dependencies:
+
+### Change bundle's position in the configuration
+
+The new bundle is automatically enabled in the configuration thanks to Flex. Even though, it's important and required to move `Ibexa\Bundle\AutomatedTranslation\IbexaAutomatedTranslationBundle::class => ['all' => true]` before `Ibexa\Bundle\AdminUi\IbexaAdminUiBundle::class => ['all' => true],` due to the templates loading order.
+
+```php
+<?php
+
+return [
+    ...
+    Ibexa\Bundle\AutomatedTranslation\IbexaAutomatedTranslationBundle::class => ['all' => true],
+    Ibexa\Bundle\AdminUi\IbexaAdminUiBundle::class => ['all' => true],
+    ...
+];
+```
+
+# Usage
+
+> All the configuration is SiteAccessAware then you can have different one depending on the SiteAccess
+
+## Basic Configuration
+
+```yaml
+# config/packages/ibexa_automated_translation.yaml
+
+ibexa_automated_translation:
+    system:
+        default:
+            configurations:
+                google:
+                    apiKey: "google-api-key"
+                deepl:
+                    authKey: "deepl-pro-key"
+```
