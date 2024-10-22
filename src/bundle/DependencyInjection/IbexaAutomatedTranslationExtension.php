@@ -46,6 +46,9 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
         $loader->load('admin_ui.yaml');
         $loader->load('default_settings.yaml');
         $loader->load('services.yaml');
+        if ($container->hasExtension('ibexa_fieldtype_page')) {
+            $loader->load('pagebuilder_services.yaml');
+        }
 
         $processor = new ConfigurationProcessor($container, $this->getAlias());
         $processor->mapSetting('configurations', $config);
