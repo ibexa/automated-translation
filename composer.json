@@ -33,9 +33,9 @@
         "symfony/http-foundation": "^5.0",
         "symfony/event-dispatcher": "^5.0",
         "guzzlehttp/guzzle": "^6.3.0",
-        "ibexa/core": "~4.6.0@dev",
-        "ibexa/fieldtype-richtext": "~4.6.0@dev",
-        "ibexa/admin-ui": "~4.6.0@dev"
+        "ibexa/core": "~4.6.0",
+        "ibexa/fieldtype-richtext": "~4.6.0",
+        "ibexa/admin-ui": "~4.6.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.2",
