@@ -26,7 +26,7 @@ class Deepl implements ClientInterface
 
     private string $authKey;
 
-    /** @var array<string, string> $languageMap */
+    /** @var array<string, string> */
     private array $languageMap;
 
     /**
