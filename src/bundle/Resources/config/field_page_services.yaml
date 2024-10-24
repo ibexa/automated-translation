@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        
+    _instanceof:
+        Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface:
+            tags: [ ibexa.automated_translation.block_attribute_encoder ]
+    
+    Ibexa\AutomatedTranslation\Encoder\Field\PageBuilderFieldEncoder:
+        arguments:
+            $blockAttributeEncoderManager: '@Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager'
+            $blockDefinitionFactory: '@Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactory'
+
+    # block attribute
+    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\TextBlockAttributeEncoder: ~
+
+    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\RichTextBlockAttributeEncoder:
+        arguments:
+            $richTextEncoder: '@Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder'
+    
+    # block attribute encoder manager
+    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager:
+        arguments:
+            $blockAttributeEncoders: !tagged_iterator ibexa.automated_translation.block_attribute_encoder

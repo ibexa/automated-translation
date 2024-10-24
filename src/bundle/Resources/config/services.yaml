@@ -8,16 +8,8 @@ services:
         Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface:
             tags: [ ibexa.automated_translation.field_encoder ]
 
-        Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface:
-            tags: [ ibexa.automated_translation.block_attribute_encoder ]
-
     # field encoder
     Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder: ~
-
-    Ibexa\AutomatedTranslation\Encoder\Field\PageBuilderFieldEncoder:
-        arguments:
-            $blockAttributeEncoderManager: '@Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager'
-            $blockDefinitionFactory: '@Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactory'
 
     Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder:
         arguments:
@@ -27,18 +19,6 @@ services:
     Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager:
         arguments:
             $fieldEncoders: !tagged_iterator ibexa.automated_translation.field_encoder
-
-    # block attribute
-    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\TextBlockAttributeEncoder: ~
-
-    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\RichTextBlockAttributeEncoder:
-        arguments:
-            $richTextEncoder: '@Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder'
-
-    # block attribute encoder manager
-    Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager:
-        arguments:
-            $blockAttributeEncoders: !tagged_iterator ibexa.automated_translation.block_attribute_encoder
 
     # RichText encoder
     Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder:
@@ -53,6 +33,11 @@ services:
 
     Ibexa\AutomatedTranslation\Client\:
         resource: '../../../lib/Client'
+        tags: [ ibexa.automated_translation.client ]
+    
+    Ibexa\AutomatedTranslation\Client\Deepl:
+        arguments:
+            $languageMap: '%ibexa.automated_translation.deepl.language_map%'
         tags: [ ibexa.automated_translation.client ]
 
     Ibexa\AutomatedTranslation\ClientProvider:
