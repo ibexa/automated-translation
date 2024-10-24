@@ -26,7 +26,7 @@ class IbexaAutomatedTranslationBundle extends Bundle
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Resources/config'));
 
         if ($container->hasExtension('ibexa_fieldtype_page')) {
-            $loader->load('pagebuilder_services.yaml');
+            $loader->load('field_page_services.yaml');
         }
     }
 }
