@@ -4,3 +4,12 @@ parameters:
     ibexa.automated_translation.site_access.config.default.non_translatable_tags: []
     ibexa.automated_translation.site_access.config.default.non_translatable_self_closed_tags: []
     ibexa.automated_translation.site_access.config.default.non_valid_attribute_tags: []
+    ibexa.automated_translation.deepl.language_map:
+        ZH_TW: 'ZH-HANT'
+        ZH_CN: 'ZH-HANS'
+        ZH_HK: 'ZH-HANS'
+        ZH: 'ZH-HANS'
+        EN_GB: 'EN-GB'
+        EN: 'EN-US'
+        PT-BR: 'PT-BR'
+        PT: 'PT-PT'
