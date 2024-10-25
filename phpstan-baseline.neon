@@ -17,12 +17,12 @@ parameters:
 
 		-
 			message: "#^Instantiated class Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value not found\\.$#"
-			count: 1
+			count: 2
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
 			message: "#^Method Ibexa\\\\AutomatedTranslation\\\\Encoder\\\\Field\\\\PageBuilderFieldEncoder\\:\\:decode\\(\\) should return Ibexa\\\\Core\\\\FieldType\\\\Value but returns Ibexa\\\\FieldTypePage\\\\FieldType\\\\LandingPage\\\\Value\\.$#"
-			count: 1
+			count: 2
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
