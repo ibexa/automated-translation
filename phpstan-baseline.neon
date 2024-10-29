@@ -1,18 +1,23 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Offset 'system' on array in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: src/bundle/DependencyInjection/IbexaAutomatedTranslationExtension.php
-
-		-
 			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(mixed\\)\\: \\(array\\|null\\) given\\.$#"
 			count: 1
 			path: src/bundle/DependencyInjection/IbexaAutomatedTranslationExtension.php
 
 		-
+			message: "#^Parameter \\#3 \\$remoteServiceKey of method Ibexa\\\\AutomatedTranslation\\\\Translator\\:\\:getTranslatedContent\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/bundle/EventListener/ContentProxyTranslateListener.php
+
+		-
 			message: "#^Access to protected property Ibexa\\\\AdminUi\\\\Form\\\\Data\\\\ContentTranslationData\\:\\:\\$content\\.$#"
 			count: 4
+			path: src/bundle/Form/Extension/ContentEditType.php
+
+		-
+			message: "#^Parameter \\#3 \\$remoteServiceKey of method Ibexa\\\\AutomatedTranslation\\\\Translator\\:\\:getTranslatedFields\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
 			path: src/bundle/Form/Extension/ContentEditType.php
 
 		-
@@ -56,7 +61,7 @@ parameters:
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Ibexa\\\\Bundle\\\\AutomatedTranslation\\\\DependencyInjection\\\\IbexaAutomatedTranslationExtension, mixed\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Ibexa\\\\Bundle\\\\AutomatedTranslation\\\\DependencyInjection\\\\IbexaAutomatedTranslationExtension, mixed\\} given\\.$#"
 			count: 1
 			path: tests/bundle/DependencyInjection/IbexaAutomatedTranslationExtensionTest.php
 
