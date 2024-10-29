@@ -13,7 +13,7 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\TextBlock;
 use PHPUnit\Framework\TestCase;
 
-class TextBlockFieldEncoderTest extends TestCase
+final class TextBlockFieldEncoderTest extends TestCase
 {
     private const TEXT_BLOCK_VALUE = "Some text.\nSome more text.";
 
