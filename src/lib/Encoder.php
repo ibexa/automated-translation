@@ -118,6 +118,7 @@ class Encoder
 
         $encoder = new XmlEncoder();
         $payload = $encoder->encode($results, XmlEncoder::FORMAT);
+
         // here Encoder has  decorated with CDATA, we don't want the CDATA
         return str_replace(
             ['<![CDATA[', ']]>'],

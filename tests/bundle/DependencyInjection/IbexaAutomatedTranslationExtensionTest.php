@@ -74,6 +74,7 @@ final class IbexaAutomatedTranslationExtensionTest extends TestCase
             ->getMock();
 
         $containerMock
+            ->expects(self::any())
             ->method('resolveEnvPlaceholders')
             ->withConsecutive(['value1'], ['value2'], ['ENV_TEST1'])
             ->willReturnOnConsecutiveCalls(['value1'], ['value2'], ['test1']);
@@ -89,6 +90,6 @@ final class IbexaAutomatedTranslationExtensionTest extends TestCase
             IbexaAutomatedTranslationExtension::class
         ))();
 
-        $this->assertEquals($expected, $hasConfiguredClientsResult);
+        self::assertEquals($expected, $hasConfiguredClientsResult);
     }
 }
