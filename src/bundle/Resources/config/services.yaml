@@ -9,6 +9,8 @@ services:
             tags: [ ibexa.automated_translation.field_encoder ]
 
     # field encoder
+    Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder: ~
+
     Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder: ~
 
     Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder:
