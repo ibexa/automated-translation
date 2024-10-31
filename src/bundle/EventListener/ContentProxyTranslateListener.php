@@ -18,17 +18,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ContentProxyTranslateListener implements EventSubscriberInterface
 {
-    /** @var \Symfony\Component\HttpFoundation\RequestStack */
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    /** @var \Ibexa\AutomatedTranslation\Translator */
-    private $translator;
+    private Translator $translator;
 
-    /** @var \Ibexa\Contracts\Core\Repository\ContentService */
-    private $contentService;
+    private ContentService $contentService;
 
-    /** @var \Symfony\Component\Routing\RouterInterface */
-    private $router;
+    private RouterInterface $router;
 
     public function __construct(
         RequestStack $requestStack,
@@ -74,7 +70,7 @@ class ContentProxyTranslateListener implements EventSubscriberInterface
         $contentDraft = $this->translator->getTranslatedContent(
             $fromLanguageCode,
             $toLanguageCode,
-            $request->query->get('translatorAlias'),
+            $request->query->get('translatorAlias') ?? '',
             $content
         );
 

@@ -15,24 +15,26 @@ use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Attribute;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\BlockValue;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Page;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Zone;
-use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Value;
 use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockAttributeDefinition;
 use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinition;
-use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactory;
+use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
+use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface;
 use PHPUnit\Framework\TestCase;
 
 final class PageBuilderFieldEncoderTest extends TestCase
 {
     public const ATTRIBUTE_VALUE = 'ibexa';
 
+    /** @var \Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager&\PHPUnit\Framework\MockObject\MockObject */
     private BlockAttributeEncoderManager $blockAttributeEncoderManagerMock;
 
-    private BlockDefinitionFactory $blockDefinitionFactoryMock;
+    /** @var \Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface&\PHPUnit\Framework\MockObject\MockObject */
+    private BlockDefinitionFactoryInterface $blockDefinitionFactoryMock;
 
     public function setUp(): void
     {
         $this->blockAttributeEncoderManagerMock = $this->createMock(BlockAttributeEncoderManager::class);
-        $this->blockDefinitionFactoryMock = $this->createMock(BlockDefinitionFactory::class);
+        $this->blockDefinitionFactoryMock = $this->createMock(BlockDefinitionFactoryInterface::class);
     }
 
     public function testEncode(): void
