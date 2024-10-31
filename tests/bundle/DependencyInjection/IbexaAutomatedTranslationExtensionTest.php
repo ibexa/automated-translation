@@ -12,7 +12,7 @@ use Ibexa\Bundle\AutomatedTranslation\DependencyInjection\IbexaAutomatedTranslat
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class IbexaAutomatedTranslationExtensionTest extends TestCase
+final class IbexaAutomatedTranslationExtensionTest extends TestCase
 {
     /**
      * @return array{array{array{system: array{default: array{configurations: array{}}}}, bool}}
@@ -63,7 +63,8 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
     }
 
     /**
-     * @param array<mixed> $input
+     * @param array{system: array{configurations: mixed}} $input
+     *
      * @dataProvider clientConfigurationDataProvider
      */
     public function testHasConfiguredClients(array $input, bool $expected): void
@@ -73,7 +74,6 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
             ->getMock();
 
         $containerMock
-            ->expects($this->any())
             ->method('resolveEnvPlaceholders')
             ->withConsecutive(['value1'], ['value2'], ['ENV_TEST1'])
             ->willReturnOnConsecutiveCalls(['value1'], ['value2'], ['test1']);
@@ -81,13 +81,13 @@ class IbexaAutomatedTranslationExtensionTest extends TestCase
         $subject = new IbexaAutomatedTranslationExtension();
 
         // call for private method hasConfiguredClients on $subject object
-        $hasConfiguredClientsResult = call_user_func_array(\Closure::bind(
-            function ($method, $params) {
-                return call_user_func_array([$this, $method], $params);
+        $hasConfiguredClientsResult = (\Closure::bind(
+            function () use ($input, $containerMock): bool {
+                return $this->hasConfiguredClients($input, $containerMock);
             },
             $subject,
             IbexaAutomatedTranslationExtension::class
-        ), ['hasConfiguredClients', [$input, $containerMock]]);
+        ))();
 
         $this->assertEquals($expected, $hasConfiguredClientsResult);
     }

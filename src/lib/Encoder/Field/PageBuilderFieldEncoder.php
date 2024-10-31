@@ -14,7 +14,7 @@ use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value as APIValue;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
-use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactory;
+use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface;
 use InvalidArgumentException;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
@@ -24,11 +24,11 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
 
     private BlockAttributeEncoderManager $blockAttributeEncoderManager;
 
-    private BlockDefinitionFactory $blockDefinitionFactory;
+    private BlockDefinitionFactoryInterface $blockDefinitionFactory;
 
     public function __construct(
         BlockAttributeEncoderManager $blockAttributeEncoderManager,
-        BlockDefinitionFactory $blockDefinitionFactory
+        BlockDefinitionFactoryInterface $blockDefinitionFactory
     ) {
         $this->blockAttributeEncoderManager = $blockAttributeEncoderManager;
         $this->blockDefinitionFactory = $blockDefinitionFactory;

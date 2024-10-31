@@ -10,7 +10,10 @@ namespace Ibexa\AutomatedTranslation\Encoder\BlockAttribute;
 
 use InvalidArgumentException;
 
-final class BlockAttributeEncoderManager
+/**
+ * @final
+ */
+class BlockAttributeEncoderManager
 {
     /** @var iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface[] */
     private $blockAttributeEncoders;
