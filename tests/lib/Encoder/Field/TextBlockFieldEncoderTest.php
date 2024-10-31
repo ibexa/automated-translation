@@ -27,7 +27,7 @@ final class TextBlockFieldEncoderTest extends TestCase
         $subject = new TextBlockFieldEncoder();
         $result = $subject->encode($field);
 
-        $this->assertEquals(self::TEXT_BLOCK_VALUE, $result);
+        self::assertEquals(self::TEXT_BLOCK_VALUE, $result);
     }
 
     public function testDecode(): void
@@ -40,7 +40,7 @@ final class TextBlockFieldEncoderTest extends TestCase
         $subject = new TextBlockFieldEncoder();
         $result = $subject->decode(self::TEXT_BLOCK_VALUE, $field->value);
 
-        $this->assertInstanceOf(TextBlock\Value::class, $result);
-        $this->assertEquals(new TextBlock\Value(self::TEXT_BLOCK_VALUE), $result);
+        self::assertInstanceOf(TextBlock\Value::class, $result);
+        self::assertEquals(new TextBlock\Value(self::TEXT_BLOCK_VALUE), $result);
     }
 }
