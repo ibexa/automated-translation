@@ -54,9 +54,13 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         foreach ($page->getBlockIterator() as $block) {
             $blockDefinition = $this->blockDefinitionFactory->getBlockDefinition($block->getType());
             $attrs = [];
+            $attributes = $blockDefinition->getAttributes();
 
             foreach ($block->getAttributes() as $attribute) {
-                $attributeType = $blockDefinition->getAttributes()[$attribute->getName()]->getType();
+                if (empty($attributes[$attribute->getName()])) {
+                    continue;
+                }
+                $attributeType = $attributes[$attribute->getName()]->getType();
 
                 if (null === ($attributeValue = $this->encodeBlockAttribute($attributeType, $attribute->getValue()))) {
                     continue;
