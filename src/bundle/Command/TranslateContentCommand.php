@@ -13,12 +13,14 @@ use Ibexa\AutomatedTranslation\Translator;
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\PermissionResolver;
 use Ibexa\Contracts\Core\Repository\UserService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'ibexa:automated:translate', description: 'Translate a Content in a new Language', aliases: ['ibexatranslate'])]
 final class TranslateContentCommand extends Command
 {
     private const ADMINISTRATOR_USER_ID = 14;
@@ -52,9 +54,6 @@ final class TranslateContentCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('ibexa:automated:translate')
-            ->setAliases(['ibexatranslate'])
-            ->setDescription('Translate a Content in a new Language')
             ->addArgument('contentId', InputArgument::REQUIRED, 'ContentId')
             ->addArgument(
                 'service',
