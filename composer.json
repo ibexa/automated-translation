@@ -59,9 +59,9 @@
         "ibexa/search": "~5.0.x-dev",
         "ibexa/user": "~5.0.x-dev",
         "phpmd/phpmd": "^2.6",
-        "phpstan/phpstan": "^1.2",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "phpstan/phpstan-symfony": "^1.0",
+        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.2"
     },
