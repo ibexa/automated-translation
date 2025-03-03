@@ -60,6 +60,31 @@ final class PageBuilderFieldEncoderTest extends TestCase
         self::assertEquals($this->getEncodeResult(), $result);
     }
 
+    public function testEncodeMissingAttribute(): void
+    {
+        $this->blockDefinitionFactoryMock
+            ->method('getBlockDefinition')
+            ->withAnyParameters()
+            ->willReturn($this->createBlockDefinition());
+
+        $this->blockAttributeEncoderManagerMock
+            ->method('encode')
+            ->withAnyParameters()
+            ->willReturn(self::ATTRIBUTE_VALUE);
+
+        $field = $this->getLandingPageField();
+        $subject = new PageBuilderFieldEncoder(
+            $this->blockAttributeEncoderManagerMock,
+            $this->blockDefinitionFactoryMock
+        );
+
+        $result = $subject->encode($field);
+        $expectedResult = '<blocks><item key="1"><name>Code</name><attributes/></item></blocks>
+';
+
+        self::assertEquals($expectedResult, $result);
+    }
+
     public function testCanEncode(): void
     {
         $field = $this->getLandingPageField();
@@ -144,14 +169,7 @@ final class PageBuilderFieldEncoderTest extends TestCase
 
     private function getBlockDefinition(): BlockDefinition
     {
-        $blockDefinition = new BlockDefinition();
-        $blockDefinition->setIdentifier('tag');
-        $blockDefinition->setName('Code');
-        $blockDefinition->setCategory('default');
-        $blockDefinition->setThumbnail('fake_thumbnail');
-        $blockDefinition->setVisible(true);
-        $blockDefinition->setConfigurationTemplate('fake_configuration_template');
-        $blockDefinition->setViews([]);
+        $blockDefinition = $this->createBlockDefinition();
 
         $attributeDefinitions = [];
         $blockAttributeDefinition = new BlockAttributeDefinition();
@@ -166,6 +184,20 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $attributeDefinitions['content'] = $blockAttributeDefinition;
 
         $blockDefinition->setAttributes($attributeDefinitions);
+
+        return $blockDefinition;
+    }
+
+    private function createBlockDefinition(): BlockDefinition
+    {
+        $blockDefinition = new BlockDefinition();
+        $blockDefinition->setIdentifier('tag');
+        $blockDefinition->setName('Code');
+        $blockDefinition->setCategory('default');
+        $blockDefinition->setThumbnail('fake_thumbnail');
+        $blockDefinition->setVisible(true);
+        $blockDefinition->setConfigurationTemplate('fake_configuration_template');
+        $blockDefinition->setViews([]);
 
         return $blockDefinition;
     }
