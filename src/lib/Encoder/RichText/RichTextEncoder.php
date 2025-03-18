@@ -97,7 +97,7 @@ final class RichTextEncoder
         foreach ($this->nonTranslatableSelfClosingTags as $tag) {
             $xmlString = (string) preg_replace_callback(
                 '#<' . $tag . '(.[^>]*)?/>#Uuim',
-                function ($matches) use ($tag) {
+                function ($matches) use ($tag): string {
                     $hash = $this->hash($matches[0]);
                     $this->placeHolderMap[$hash] = $matches[0];
 
@@ -110,7 +110,7 @@ final class RichTextEncoder
         foreach ($this->nonTranslatableTags as $tag) {
             $xmlString = (string) preg_replace_callback(
                 '#<' . $tag . '(>| (.[^>]*)?>)((?:.|\n)*)</' . $tag . '>#Uuim',
-                function ($matches) use ($tag) {
+                function ($matches) use ($tag): string {
                     $hash = $this->hash($matches[0]);
                     $this->placeHolderMap[$hash] = $matches[0];
 
@@ -123,7 +123,7 @@ final class RichTextEncoder
         foreach ($this->nonValidAttributeTags as $tag) {
             $xmlString = (string) preg_replace_callback(
                 '#<' . $tag . '(.[^>]*)>#Uuim',
-                function ($matches) use ($tag) {
+                function ($matches) use ($tag): string {
                     $hash = $this->hash($matches[0]);
                     $this->placeHolderMap[$hash] = $matches[0];
 
@@ -154,7 +154,7 @@ final class RichTextEncoder
         foreach (array_reverse($this->nonTranslatableSelfClosingTags) as $tag) {
             $value = (string) preg_replace_callback(
                 '#<' . $tag . '>(.*)</' . $tag . '>#Uuim',
-                function ($matches) {
+                function (array $matches) {
                     return $this->placeHolderMap[trim($matches[1])];
                 },
                 $value
@@ -164,7 +164,7 @@ final class RichTextEncoder
         foreach (array_reverse($this->nonTranslatableTags) as $tag) {
             $value = (string) preg_replace_callback(
                 '#<' . $tag . '>(.*)</' . $tag . '>#Uuim',
-                function ($matches) {
+                function (array $matches) {
                     return $this->placeHolderMap[trim($matches[1])];
                 },
                 $value
@@ -174,7 +174,7 @@ final class RichTextEncoder
         foreach ($this->nonValidAttributeTags as $tag) {
             $value = (string) preg_replace_callback(
                 '#<fake' . $tag . '(.[^>]*)>#Uuim',
-                function ($matches) {
+                function (array $matches) {
                     return $this->placeHolderMap[trim(str_replace('="1"', '', $matches[1]))];
                 },
                 $value

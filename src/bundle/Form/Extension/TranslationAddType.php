@@ -23,11 +23,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TranslationAddType extends AbstractTypeExtension
 {
-    /** @var \Ibexa\AutomatedTranslation\ClientProvider */
-    private $clientProvider;
+    private ClientProvider $clientProvider;
 
-    /** @var \Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface */
-    private $localeConverter;
+    private LocaleConverterInterface $localeConverter;
 
     public function __construct(
         ClientProvider $clientProvider,
@@ -86,7 +84,7 @@ class TranslationAddType extends AbstractTypeExtension
 
                         return $client;
                     },
-                    'choice_value' => static function ($client) {
+                    'choice_value' => static function ($client): string {
                         if ($client instanceof ClientInterface) {
                             return $client->getServiceAlias();
                         }
@@ -104,7 +102,7 @@ class TranslationAddType extends AbstractTypeExtension
         // let's pass to the template/form the possible language
         $map = [];
 
-        $fillMap = function ($key, &$map) use ($form) {
+        $fillMap = function ($key, array &$map) use ($form): void {
             $languages = $form->get($key);
             $choices = $languages->getConfig()->getAttribute('choice_list')->getChoices();
             /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Language $language */

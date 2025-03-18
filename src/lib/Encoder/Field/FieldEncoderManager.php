@@ -15,7 +15,7 @@ use InvalidArgumentException;
 final class FieldEncoderManager
 {
     /** @var iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface[] */
-    private $fieldEncoders;
+    private iterable $fieldEncoders;
 
     /**
      * @param iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface[] $fieldEncoders

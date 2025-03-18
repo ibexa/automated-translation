@@ -17,6 +17,7 @@ use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -136,7 +137,7 @@ XML;
      *
      * @return \Ibexa\Contracts\Core\Repository\ContentTypeService|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getContentTypeServiceMock()
+    protected function getContentTypeServiceMock(): MockObject
     {
         return $this
             ->getMockBuilder('Ibexa\\Contracts\\Core\\Repository\\ContentTypeService')
