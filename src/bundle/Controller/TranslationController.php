@@ -16,8 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class TranslationController extends Controller
 {
-    /** @var \Ibexa\Bundle\AdminUi\Controller\TranslationController */
-    private $translationController;
+    private BaseTranslationController $translationController;
 
     public function __construct(BaseTranslationController $translationController)
     {

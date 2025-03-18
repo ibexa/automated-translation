@@ -21,14 +21,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentEditType extends AbstractTypeExtension
 {
-    /** @var \Ibexa\AutomatedTranslation\Translator */
-    private $translator;
+    private Translator $translator;
 
-    /** @var \Symfony\Component\HttpFoundation\RequestStack */
-    private $requestStack;
+    private RequestStack $requestStack;
 
-    /** @var \Ibexa\Contracts\Core\Repository\ContentTypeService */
-    private $contentTypeService;
+    private ContentTypeService $contentTypeService;
 
     public function __construct(
         Translator $translator,
@@ -49,7 +46,7 @@ class ContentEditType extends AbstractTypeExtension
     {
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
+            function (FormEvent $event): void {
                 /** @var \Ibexa\AdminUi\Form\Data\ContentTranslationData $data */
                 $data = $event->getData();
                 if (!$data instanceof ContentTranslationData) {

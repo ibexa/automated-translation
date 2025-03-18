@@ -12,11 +12,9 @@ use Ibexa\Core\FieldType\Value;
 
 final class FieldDecodeEvent
 {
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var \Ibexa\Core\FieldType\Value */
-    private $value;
+    private Value $value;
 
     /** @var mixed */
     private $previousValue;
