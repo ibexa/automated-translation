@@ -10,6 +10,7 @@ namespace Ibexa\Tests\AutomatedTranslation;
 
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
@@ -134,13 +135,11 @@ XML;
 
     /**
      * Returns ContentTypeService mock object.
-     *
-     * @return \Ibexa\Contracts\Core\Repository\ContentTypeService|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getContentTypeServiceMock(): MockObject
+    protected function getContentTypeServiceMock(): ContentTypeService&MockObject
     {
         return $this
-            ->getMockBuilder('Ibexa\\Contracts\\Core\\Repository\\ContentTypeService')
+            ->getMockBuilder(ContentTypeService::class)
             ->getMock();
     }
 

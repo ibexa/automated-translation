@@ -15,8 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class RichTextEncoderTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject|\Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface */
-    private MockObject $configResolver;
+    private ConfigResolverInterface&MockObject $configResolver;
 
     public function setUp(): void
     {
