@@ -10,6 +10,7 @@ namespace Ibexa\Tests\AutomatedTranslation;
 
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
@@ -17,6 +18,7 @@ use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -133,13 +135,11 @@ XML;
 
     /**
      * Returns ContentTypeService mock object.
-     *
-     * @return \Ibexa\Contracts\Core\Repository\ContentTypeService|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getContentTypeServiceMock()
+    protected function getContentTypeServiceMock(): ContentTypeService&MockObject
     {
         return $this
-            ->getMockBuilder('Ibexa\\Contracts\\Core\\Repository\\ContentTypeService')
+            ->getMockBuilder(ContentTypeService::class)
             ->getMock();
     }
 

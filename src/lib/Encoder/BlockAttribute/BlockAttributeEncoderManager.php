@@ -16,7 +16,7 @@ use InvalidArgumentException;
 class BlockAttributeEncoderManager
 {
     /** @var iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface[] */
-    private $blockAttributeEncoders;
+    private iterable $blockAttributeEncoders;
 
     /**
      * @param iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface[] $blockAttributeEncoders

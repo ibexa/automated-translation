@@ -10,12 +10,12 @@ namespace Ibexa\Tests\AutomatedTranslation\Encoder\RichText;
 
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class RichTextEncoderTest extends TestCase
 {
-    /** @var \PHPUnit\Framework\MockObject\MockObject|\Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface */
-    private $configResolver;
+    private ConfigResolverInterface&MockObject $configResolver;
 
     public function setUp(): void
     {
