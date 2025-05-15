@@ -66,7 +66,7 @@ final class TranslationController extends Controller
         );
 
         /** @var array{'base_language': string, 'language': string, translatorAlias?: string} $translationParam */
-        $translationParam = $request->request->get('add-translation');
+        $translationParam = $request->request->all('add-translation');
         $serviceAlias = $translationParam['translatorAlias'] ?? '';
 
         if ('' === $serviceAlias || (
