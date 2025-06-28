@@ -36,12 +36,12 @@
         "ibexa/admin-ui": "~5.0.0@dev",
         "ibexa/core": "~5.0.0@dev",
         "ibexa/fieldtype-richtext": "~5.0.0@dev",
-        "symfony/console": "^7.2",
-        "symfony/event-dispatcher": "^7.2",
-        "symfony/form": "^7.2",
-        "symfony/http-foundation": "^7.2",
-        "symfony/routing": "^7.2",
-        "symfony/yaml": "^7.2"
+        "symfony/console": "^7.3",
+        "symfony/event-dispatcher": "^7.3",
+        "symfony/form": "^7.3",
+        "symfony/http-foundation": "^7.3",
+        "symfony/routing": "^7.3",
+        "symfony/yaml": "^7.3"
     },
     "require-dev": {
         "dg/bypass-finals": "^1.3",
