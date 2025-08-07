@@ -31,6 +31,18 @@ parameters:
 			path: src/bundle/Form/TranslationAddDataTransformer.php
 
 		-
+			message: '#^Call to an undefined method DOMNode\:\:getAttribute\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/lib/Encoder.php
+
+		-
+			message: '#^Call to an undefined method DOMNode\:\:getAttribute\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
+
+		-
 			message: '#^Cannot call method setValue\(\) on Ibexa\\Contracts\\FieldTypePage\\FieldType\\LandingPage\\Model\\Attribute\|null\.$#'
 			identifier: method.nonObject
 			count: 1
