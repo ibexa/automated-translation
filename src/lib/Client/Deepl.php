@@ -9,9 +9,9 @@ declare(strict_types=1);
 namespace Ibexa\AutomatedTranslation\Client;
 
 use GuzzleHttp\Client;
-use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
+use Ibexa\Contracts\AutomatedTranslation\Exception\ClientNotConfiguredException;
 
 class Deepl implements ClientInterface
 {

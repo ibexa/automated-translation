@@ -6,10 +6,10 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\AutomatedTranslation\Exception;
+namespace Ibexa\Contracts\AutomatedTranslation\Exception;
 
 use RuntimeException;
 
-class ClientNotConfiguredException extends RuntimeException
+final class ClientNotConfiguredException extends RuntimeException
 {
 }
