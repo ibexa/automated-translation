@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 
-class IbexaAutomatedTranslationExtension extends Extension implements PrependExtensionInterface
+final class IbexaAutomatedTranslationExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -60,7 +60,7 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
      */
     private function hasConfiguredClients(array $config, ContainerBuilder $container): bool
     {
-        return 0 !== count(array_filter($config['system'], static function (array $value) use ($container): ?array {
+        return 0 !== count(array_filter($config['system'], static function (array $value) use ($container): array {
             return array_filter($value['configurations'], static function ($value) use ($container): bool {
                 $value = is_array($value) ? reset($value) : $value;
 
