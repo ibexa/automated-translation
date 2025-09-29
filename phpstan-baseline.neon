@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(mixed\)\: array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/bundle/DependencyInjection/IbexaAutomatedTranslationExtension.php
-
-		-
 			message: '#^Access to protected property Ibexa\\AdminUi\\Form\\Data\\ContentTranslationData\:\:\$content\.$#'
 			identifier: property.protected
 			count: 4
@@ -53,4 +47,3 @@ parameters:
 			identifier: method.unresolvableReturnType
 			count: 2
 			path: tests/lib/EncoderTest.php
-
