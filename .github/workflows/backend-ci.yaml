@@ -16,6 +16,13 @@ jobs:
                 php:
                     - '8.1'
         steps:
+            -   uses: actions/create-github-app-token@v2
+                id: generate_token
+                with:
+                    app-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    private-key: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    owner: ${{ github.repository_owner }}
+
             - uses: actions/checkout@v4
 
             - name: Setup PHP Action
@@ -29,11 +36,11 @@ jobs:
             -   name: Add composer keys for private packagist
                 run: |
                     composer config http-basic.updates.ibexa.co $SATIS_NETWORK_KEY $SATIS_NETWORK_TOKEN
-                    composer config github-oauth.github.com $TRAVIS_GITHUB_TOKEN
+                    composer config github-oauth.github.com $GITHUB_TOKEN
                 env:
                     SATIS_NETWORK_KEY: ${{ secrets.SATIS_NETWORK_KEY }}
                     SATIS_NETWORK_TOKEN: ${{ secrets.SATIS_NETWORK_TOKEN }}
-                    TRAVIS_GITHUB_TOKEN: ${{ secrets.TRAVIS_GITHUB_TOKEN }}
+                    GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
             - uses: ramsey/composer-install@v3
               with:
@@ -56,6 +63,13 @@ jobs:
                     - '8.3'
 
         steps:
+            -   uses: actions/create-github-app-token@v2
+                id: generate_token
+                with:
+                    app-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                    private-key: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                    owner: ${{ github.repository_owner }}
+
             - uses: actions/checkout@v4
 
             - name: Setup PHP Action
@@ -69,11 +83,11 @@ jobs:
             -   name: Add composer keys for private packagist
                 run: |
                     composer config http-basic.updates.ibexa.co $SATIS_NETWORK_KEY $SATIS_NETWORK_TOKEN
-                    composer config github-oauth.github.com $TRAVIS_GITHUB_TOKEN
+                    composer config github-oauth.github.com $GITHUB_TOKEN
                 env:
                     SATIS_NETWORK_KEY: ${{ secrets.SATIS_NETWORK_KEY }}
                     SATIS_NETWORK_TOKEN: ${{ secrets.SATIS_NETWORK_TOKEN }}
-                    TRAVIS_GITHUB_TOKEN: ${{ secrets.TRAVIS_GITHUB_TOKEN }}
+                    GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
             - uses: ramsey/composer-install@v3
               with:
