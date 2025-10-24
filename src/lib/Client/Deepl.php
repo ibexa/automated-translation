@@ -61,7 +61,6 @@ class Deepl implements ClientInterface
     public function translate(string $payload, ?string $from, string $to): string
     {
         $parameters = [
-            'auth_key' => $this->authKey,
             'target_lang' => $this->normalized($to),
             'tag_handling' => 'xml',
             'text' => $payload,
@@ -77,6 +76,9 @@ class Deepl implements ClientInterface
             [
                 'base_uri' => 'https://api.deepl.com',
                 'timeout' => 5.0,
+                'headers' => [
+                    'Authorization' => 'DeepL-Auth-Key ' . $this->authKey,
+                ],
             ]
         );
         $response = $http->post('/v2/translate', ['form_params' => $parameters]);
