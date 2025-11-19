@@ -100,7 +100,11 @@ class Google implements ClientInterface, LoggerAwareInterface
 
     public function supportsLanguage(string $languageCode): bool
     {
-        return \in_array($this->normalized($languageCode), self::LANGUAGE_CODES);
+        try {
+            return \in_array($this->normalized($languageCode), self::LANGUAGE_CODES);
+        } catch (InvalidLanguageCodeException $e) {
+            return false;
+        }
     }
 
     private function normalized(string $languageCode): string
