@@ -5,14 +5,21 @@
         {% if form.translatorAlias.vars.choices is defined %}
             {# that is a select - then multiple providers #}
             <label class="ibexa-label form-label">
+
                 {{ 'tab.translations.remote.translation.service'|trans()|desc('Use automatic translation') }}
             </label>
-            {{ form_widget(form.translatorAlias, { attr: { class: "ibexa-automated-translation-services-container__input" } }) }}
+            {{ form_widget(form.translatorAlias, {
+                attr: {
+                    'class': 'ibexa-automated-translation-services-container__input'
+                }|merge(form.vars.supported_provider_map)
+            }) }}
         {% else %}
             {# that is a checkbox - then one provider #}
             {{ form_widget(form.translatorAlias, {
                 label: 'tab.translations.remote.translation.service.with'|trans({"%alias%": form.translatorAlias.vars.label })|desc('Use automatic translation with %alias%'),
-                attr: { class: "ibexa-automated-translation-services-container__input" },
+                attr: {
+                    'class': 'ibexa-automated-translation-services-container__input'
+                }|merge(form.vars.supported_provider_map),
             }) }}
         {% endif %}
     </div>
