@@ -59,7 +59,7 @@ class TranslationAddType extends AbstractTypeExtension
                     [
                         'label' => $client->getServiceFullName(),
                         'value' => $client->getServiceAlias(),
-                        'data' => true,
+                        'data' => false,
                         'required' => false,
                         'disabled' => true,
                     ]
@@ -124,7 +124,13 @@ class TranslationAddType extends AbstractTypeExtension
         $fillMap('language', $map);
         $fillMap('base_language', $map);
 
+        $supportedProviderMap = [];
+        foreach ($map as $provider => $languages) {
+            $supportedProviderMap["data-supported-translation-languages-$provider"] = implode(' ', $languages);
+        }
+
         $view->vars['autotranslated_data'] = $map;
+        $view->vars['supported_provider_map'] = $supportedProviderMap;
         parent::buildView($view, $form, $options);
     }
 
