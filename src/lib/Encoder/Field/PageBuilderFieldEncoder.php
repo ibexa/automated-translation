@@ -56,7 +56,9 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $page = $value->getPage();
         $blocks = [];
 
-        foreach ($page->getBlockIterator() as $block) {
+        $blockIterable = $page === null ? [] : $page->getBlockIterator();
+
+        foreach ($blockIterable as $block) {
             $blockDefinition = $this->blockDefinitionFactory->getBlockDefinition($block->getType());
             $attrs = [];
             $attributes = $blockDefinition->getAttributes();
@@ -139,7 +141,12 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         );
 
         /** @var \Ibexa\FieldTypePage\FieldType\LandingPage\Value $previousFieldValue */
-        $page = clone $previousFieldValue->getPage();
+        $page = $previousFieldValue->getPage();
+        if ($page === null) {
+            return new Value();
+        }
+
+        $page = clone $page;
         $decodeArray = $encoder->decode($data, XmlEncoder::FORMAT);
 
         if (!is_array($decodeArray)) {

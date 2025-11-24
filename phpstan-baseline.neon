@@ -59,4 +59,3 @@ parameters:
 			identifier: method.unresolvableReturnType
 			count: 2
 			path: tests/lib/EncoderTest.php
-
