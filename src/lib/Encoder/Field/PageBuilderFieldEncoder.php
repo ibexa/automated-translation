@@ -8,19 +8,15 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
-use DOMCdataSection;
-use DOMDocument;
-use DOMXPath;
 use Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager;
+use Ibexa\AutomatedTranslation\EncoderHelper;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value as APIValue;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
 use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface;
-use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 final class PageBuilderFieldEncoder implements FieldEncoderInterface
@@ -31,12 +27,16 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
 
     private BlockDefinitionFactoryInterface $blockDefinitionFactory;
 
+    private EncoderHelper $encoderHelper;
+
     public function __construct(
         BlockAttributeEncoderManager $blockAttributeEncoderManager,
-        BlockDefinitionFactoryInterface $blockDefinitionFactory
+        BlockDefinitionFactoryInterface $blockDefinitionFactory,
+        EncoderHelper $encoderHelper
     ) {
         $this->blockAttributeEncoderManager = $blockAttributeEncoderManager;
         $this->blockDefinitionFactory = $blockDefinitionFactory;
+        $this->encoderHelper = $encoderHelper;
     }
 
     public function canEncode(Field $field): bool
@@ -90,41 +90,11 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $payload = $encoder->encode($blocks, XmlEncoder::FORMAT, [
             XmlEncoder::ROOT_NODE_NAME => 'blocks',
         ]);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($payload);
-        $xpath = new DOMXPath($dom);
-        $textNodes = $xpath->query('//text()');
-        if ($textNodes !== false) {
-            foreach ($textNodes as $textNode) {
-                if ($textNode instanceof DOMCdataSection) {
-                    $parent = $textNode->parentNode;
-                    if ($parent === null) {
-                        continue;
-                    }
-
-                    $type = $parent->getAttribute('type');
-
-                    if ($type !== RichTextValue::class) {
-                        $newText = $dom->createTextNode($textNode->data);
-                        $parent->replaceChild($newText, $textNode);
-                    }
-                }
-            }
-            $payload = $dom->saveXML();
-
-            if (!$payload) {
-                throw new RuntimeException(
-                    sprintf('Saving XML failed after removing CDATA, error: %s', preg_last_error_msg())
-                );
-            }
-        }
-
-        $payload = str_replace('<?xml version="1.0"?>' . "\n", '', $payload);
+        $payload = $this->encoderHelper->clearCDATAInTextField($payload);
 
         $payload = str_replace(
-            ['<![CDATA[', ']]>'],
-            ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
+            ['<?xml version="1.0"?>' . "\n", '<![CDATA[', ']]>'],
+            ['', '<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
             $payload
         );
 

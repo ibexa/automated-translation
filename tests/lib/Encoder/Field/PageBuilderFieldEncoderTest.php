@@ -10,6 +10,7 @@ namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 
 use Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager;
 use Ibexa\AutomatedTranslation\Encoder\Field\PageBuilderFieldEncoder;
+use Ibexa\AutomatedTranslation\EncoderHelper;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\Attribute;
 use Ibexa\Contracts\FieldTypePage\FieldType\LandingPage\Model\BlockValue;
@@ -52,7 +53,8 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $field = $this->getLandingPageField();
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
-            $this->blockDefinitionFactoryMock
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
         );
 
         $result = $subject->encode($field);
@@ -75,7 +77,8 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $field = $this->getLandingPageField();
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
-            $this->blockDefinitionFactoryMock
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
         );
 
         $result = $subject->encode($field);
@@ -90,7 +93,8 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $field = $this->getLandingPageField();
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
-            $this->blockDefinitionFactoryMock
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
         );
 
         self::assertTrue($subject->canEncode($field));
@@ -107,7 +111,8 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $field = $this->getLandingPageField();
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
-            $this->blockDefinitionFactoryMock
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
         );
 
         $result = $subject->decode(
@@ -124,7 +129,8 @@ final class PageBuilderFieldEncoderTest extends TestCase
         $field = $this->getLandingPageField();
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
-            $this->blockDefinitionFactoryMock
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
         );
 
         self::assertTrue($subject->canDecode(get_class($field->value)));

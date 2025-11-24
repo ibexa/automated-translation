@@ -8,9 +8,6 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation;
 
-use DOMCdataSection;
-use DOMDocument;
-use DOMXPath;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException;
 use Ibexa\Bundle\AutomatedTranslation\Event\FieldDecodeEvent;
@@ -21,9 +18,7 @@ use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value;
-use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -84,14 +79,18 @@ class Encoder
 
     private FieldEncoderManager $fieldEncoderManager;
 
+    private EncoderHelper $encoderHelper;
+
     public function __construct(
         ContentTypeService $contentTypeService,
         EventDispatcherInterface $eventDispatcher,
-        FieldEncoderManager $fieldEncoderManager
+        FieldEncoderManager $fieldEncoderManager,
+        EncoderHelper $encoderHelper
     ) {
         $this->contentTypeService = $contentTypeService;
         $this->eventDispatcher = $eventDispatcher;
         $this->fieldEncoderManager = $fieldEncoderManager;
+        $this->encoderHelper = $encoderHelper;
     }
 
     public function encode(Content $content): string
@@ -123,35 +122,7 @@ class Encoder
 
         $encoder = new XmlEncoder();
         $payload = $encoder->encode($results, XmlEncoder::FORMAT);
-
-        $dom = new DOMDocument();
-        $dom->loadXML($payload);
-        $xpath = new DOMXPath($dom);
-        $textNodes = $xpath->query('//text()');
-        if ($textNodes !== false) {
-            foreach ($textNodes as $textNode) {
-                if ($textNode instanceof DOMCdataSection) {
-                    $parent = $textNode->parentNode;
-                    if ($parent === null) {
-                        continue;
-                    }
-
-                    $type = $parent->getAttribute('type');
-
-                    if ($type !== RichTextValue::class) {
-                        $newText = $dom->createTextNode($textNode->data);
-                        $parent->replaceChild($newText, $textNode);
-                    }
-                }
-            }
-            $payload = $dom->saveXML();
-
-            if (!$payload) {
-                throw new RuntimeException(
-                    sprintf('Saving XML failed after removing CDATA, error: %s', preg_last_error_msg())
-                );
-            }
-        }
+        $payload = $this->encoderHelper->clearCDATAInTextField($payload);
 
         // here Encoder has  decorated with CDATA, we don't want the CDATA
         return str_replace(
