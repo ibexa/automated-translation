@@ -10,6 +10,7 @@ namespace Ibexa\Tests\AutomatedTranslation;
 
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\AutomatedTranslation\EncoderHelper;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
@@ -41,7 +42,8 @@ class EncoderTest extends TestCase
         $subject = new Encoder(
             $contentTypeServiceMock,
             $eventDispatcherMock,
-            $fieldEncoderManagerMock
+            $fieldEncoderManagerMock,
+            new EncoderHelper()
         );
 
         $encodeResult = $subject->encode($content);
@@ -119,7 +121,8 @@ XML;
         $subject = new Encoder(
             $contentTypeServiceMock,
             $eventDispatcherMock,
-            $fieldEncoderManagerMock
+            $fieldEncoderManagerMock,
+            new EncoderHelper()
         );
 
         $encodeResult = $subject->encode($content);
