@@ -38,7 +38,7 @@
         "symfony/form": "^5.0",
         "symfony/http-foundation": "^5.0",
         "symfony/event-dispatcher": "^5.0",
-        "guzzlehttp/guzzle": "^6.3.0",
+        "guzzlehttp/guzzle": "^6.3.0 || ^7.9",
         "ibexa/core": "~4.6.x-dev",
         "ibexa/fieldtype-richtext": "~4.6.x-dev",
         "ibexa/admin-ui": "~4.6.x-dev"
