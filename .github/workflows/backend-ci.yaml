@@ -16,35 +16,14 @@ jobs:
                 php:
                     - '8.3'
         steps:
-            -   uses: actions/create-github-app-token@v2
-                id: generate_token
-                with:
-                    app-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
-                    private-key: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
-                    owner: ${{ github.repository_owner }}
-
             - uses: actions/checkout@v4
 
-            - name: Setup PHP Action
-              uses: shivammathur/setup-php@v2
+            - uses: ibexa/gh-workflows/actions/composer-install@main
               with:
-                  php-version: ${{ matrix.php }}
-                  coverage: none
-                  extensions: 'pdo_sqlite, gd'
-                  tools: cs2pr
-
-            -   name: Add composer keys for private packagist
-                run: |
-                    composer config http-basic.updates.ibexa.co $SATIS_NETWORK_KEY $SATIS_NETWORK_TOKEN
-                    composer config github-oauth.github.com $GITHUB_TOKEN
-                env:
-                    SATIS_NETWORK_KEY: ${{ secrets.SATIS_NETWORK_KEY }}
-                    SATIS_NETWORK_TOKEN: ${{ secrets.SATIS_NETWORK_TOKEN }}
-                    GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-
-            - uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: "highest"
+                  gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                  gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                  satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                  satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
 
             - name: Run code style check
               run: composer run-script check-cs -- --format=checkstyle | cs2pr
@@ -59,38 +38,18 @@ jobs:
             matrix:
                 php:
                     - '8.3'
+                    - '8.4'
 
         steps:
-            -   uses: actions/create-github-app-token@v2
-                id: generate_token
-                with:
-                    app-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
-                    private-key: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
-                    owner: ${{ github.repository_owner }}
-
             - uses: actions/checkout@v4
 
-            - name: Setup PHP Action
-              uses: shivammathur/setup-php@v2
+            - uses: ibexa/gh-workflows/actions/composer-install@main
               with:
+                  gh-client-id: ${{ secrets.AUTOMATION_CLIENT_ID }}
+                  gh-client-secret: ${{ secrets.AUTOMATION_CLIENT_SECRET }}
+                  satis-network-key: ${{ secrets.SATIS_NETWORK_KEY }}
+                  satis-network-token: ${{ secrets.SATIS_NETWORK_TOKEN }}
                   php-version: ${{ matrix.php }}
-                  coverage: none
-                  extensions: pdo_sqlite, gd
-                  tools: cs2pr
-
-            -   name: Add composer keys for private packagist
-                run: |
-                    composer config http-basic.updates.ibexa.co $SATIS_NETWORK_KEY $SATIS_NETWORK_TOKEN
-                    composer config github-oauth.github.com $GITHUB_TOKEN
-                env:
-                    SATIS_NETWORK_KEY: ${{ secrets.SATIS_NETWORK_KEY }}
-                    SATIS_NETWORK_TOKEN: ${{ secrets.SATIS_NETWORK_TOKEN }}
-                    GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-
-            - uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: "highest"
-                  composer-options: "--prefer-dist --no-progress --no-suggest"
 
             - name: Setup problem matchers for PHPUnit
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
