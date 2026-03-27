@@ -31,12 +31,6 @@ parameters:
 			path: src/lib/Encoder/Field/PageBuilderFieldEncoder.php
 
 		-
-			message: '#^Call to an undefined method DOMNode\:\:getAttribute\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/lib/EncoderHelper.php
-
-		-
 			message: '#^Parameter \#1 \$type of method Ibexa\\AutomatedTranslation\\Encoder\\Field\\PageBuilderFieldEncoder\:\:canDecode\(\) expects string, class\-string\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -51,5 +45,5 @@ parameters:
 		-
 			message: '#^Return type of call to method PHPUnit\\Framework\\MockObject\\MockBuilder\<Ibexa\\AutomatedTranslation\\Encoder\\Field\\FieldEncoderManager\>\:\:getMock\(\) contains unresolvable type\.$#'
 			identifier: method.unresolvableReturnType
-			count: 2
+			count: 3
 			path: tests/lib/EncoderTest.php

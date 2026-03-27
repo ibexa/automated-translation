@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 final class PageBuilderFieldEncoderTest extends TestCase
 {
     public const ATTRIBUTE_VALUE = 'ibexa';
+    public const ATTRIBUTE_VALUE_CDATA = 'ibexa & ibexa';
 
     /** @var \Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager&\PHPUnit\Framework\MockObject\MockObject */
     private BlockAttributeEncoderManager $blockAttributeEncoderManagerMock;
@@ -86,6 +87,31 @@ final class PageBuilderFieldEncoderTest extends TestCase
 ';
 
         self::assertEquals($expectedResult, $result);
+    }
+
+    public function testEncodeCDATAInTextField(): void
+    {
+        $this->blockDefinitionFactoryMock
+            ->method('getBlockDefinition')
+            ->withAnyParameters()
+            ->willReturn($this->getBlockDefinition());
+
+        $this->blockAttributeEncoderManagerMock
+            ->method('encode')
+            ->withAnyParameters()
+            ->willReturn(self::ATTRIBUTE_VALUE_CDATA);
+
+        $field = $this->getLandingPageField();
+        $subject = new PageBuilderFieldEncoder(
+            $this->blockAttributeEncoderManagerMock,
+            $this->blockDefinitionFactoryMock,
+            new EncoderHelper()
+        );
+
+        $result = $subject->encode($field);
+        $encodedValue = htmlspecialchars(self::ATTRIBUTE_VALUE_CDATA);
+
+        self::assertEquals($this->getEncodeResult($encodedValue), $result);
     }
 
     public function testCanEncode(): void
@@ -208,10 +234,10 @@ final class PageBuilderFieldEncoderTest extends TestCase
         return $blockDefinition;
     }
 
-    private function getEncodeResult(): string
+    private function getEncodeResult(string $value = self::ATTRIBUTE_VALUE): string
     {
         return '<blocks><item key="1"><name>Code</name><attributes><content type="string">' .
-            self::ATTRIBUTE_VALUE . '</content></attributes></item></blocks>
+            $value . '</content></attributes></item></blocks>
 ';
     }
 }

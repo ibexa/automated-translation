@@ -10,11 +10,12 @@ namespace Ibexa\AutomatedTranslation;
 
 use DOMCdataSection;
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use RuntimeException;
 
-class EncoderHelper
+final class EncoderHelper
 {
     public function clearCDATAInTextField(string $payload): string
     {
@@ -31,7 +32,7 @@ class EncoderHelper
                 continue;
             }
             $parent = $textNode->parentNode;
-            if ($parent === null) {
+            if (!$parent instanceof DOMElement) {
                 continue;
             }
 
