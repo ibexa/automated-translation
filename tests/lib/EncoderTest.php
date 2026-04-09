@@ -54,45 +54,12 @@ class EncoderTest extends TestCase
 
 XML;
 
-        $this->assertEquals($expected, $encodeResult);
+        self::assertEquals($expected, $encodeResult);
     }
 
     public function testEncodeTwoTextline(): void
     {
-        $contentTypeServiceMock = $this->getContentTypeServiceMock();
-        $eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
-        $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
-
-        $contentType = $this->getMockForAbstractClass(
-            ContentType::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getFieldDefinition']
-        );
-        $fieldDefinition = $this->getMockBuilder(FieldDefinition::class)
-            ->setConstructorArgs([
-                [
-                    'fieldTypeIdentifier' => 'ezstring',
-                    'isTranslatable' => true,
-                ],
-            ])
-            ->getMockForAbstractClass();
-
-        $contentType
-            ->expects($this->exactly(2))
-            ->method('getFieldDefinition')
-            ->withConsecutive(['field_1_textline'], ['field_2_textline'])
-            ->willReturnOnConsecutiveCalls($fieldDefinition, $fieldDefinition);
-
-        $contentTypeServiceMock
-            ->expects($this->once())
-            ->method('loadContentType')
-            ->with(123)
-            ->willReturn($contentType);
-
+        $subject = $this->prepareEncoderForTextLines('encoded', ['field_1_textline'], ['field_2_textline']);
         $content = new Content([
             'versionInfo' => new VersionInfo([
                 'contentInfo' => new ContentInfo([
@@ -112,29 +79,45 @@ XML;
             ],
         ]);
 
-        $fieldEncoderManagerMock
-            ->expects($this->exactly(2))
-            ->method('encode')
-            ->withAnyParameters()
-            ->willReturn('encoded');
-
-        $subject = new Encoder(
-            $contentTypeServiceMock,
-            $eventDispatcherMock,
-            $fieldEncoderManagerMock,
-            new EncoderHelper()
-        );
-
         $encodeResult = $subject->encode($content);
 
         $expectedEncodeResult = '<?xml version="1.0"?>
 <response><field_1_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">encoded</field_1_textline><field_2_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">encoded</field_2_textline></response>
 ';
 
-        $this->assertEquals($expectedEncodeResult, $encodeResult);
+        self::assertEquals($expectedEncodeResult, $encodeResult);
     }
 
     public function testEncodeTextlineWithAmp(): void
+    {
+        $subject = $this->prepareEncoderForTextLines('Some text 1 & 2', ['field_1_textline']);
+        $content = new Content([
+            'versionInfo' => new VersionInfo([
+                'contentInfo' => new ContentInfo([
+                    'id' => 1,
+                    'contentTypeId' => 123,
+                ]),
+            ]),
+            'internalFields' => [
+                new Field([
+                    'fieldDefIdentifier' => 'field_1_textline',
+                    'value' => new TextLine\Value('Some text 1 & 2'),
+                ]),
+            ],
+        ]);
+        $encodeResult = $subject->encode($content);
+
+        $expectedEncodeResult = '<?xml version="1.0"?>
+<response><field_1_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">Some text 1 &amp; 2</field_1_textline></response>
+';
+
+        self::assertEquals($expectedEncodeResult, $encodeResult);
+    }
+
+    /**
+     * @param mixed $contentTypeConsecutive
+     */
+    private function prepareEncoderForTextLines(string $fieldEncoderReturned, ...$contentTypeConsecutive): Encoder
     {
         $contentTypeServiceMock = $this->getContentTypeServiceMock();
         $eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
@@ -157,58 +140,32 @@ XML;
                 ],
             ])
             ->getMockForAbstractClass();
+        $expected = count($contentTypeConsecutive);
 
         $contentType
-            ->expects($this->exactly(2))
+            ->expects(self::exactly($expected))
             ->method('getFieldDefinition')
-            ->withConsecutive(['field_1_textline'], ['field_2_textline'])
+            ->withConsecutive(...$contentTypeConsecutive)
             ->willReturnOnConsecutiveCalls($fieldDefinition, $fieldDefinition);
 
         $contentTypeServiceMock
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('loadContentType')
             ->with(123)
             ->willReturn($contentType);
 
-        $content = new Content([
-            'versionInfo' => new VersionInfo([
-                'contentInfo' => new ContentInfo([
-                    'id' => 1,
-                    'contentTypeId' => 123,
-                ]),
-            ]),
-            'internalFields' => [
-                new Field([
-                    'fieldDefIdentifier' => 'field_1_textline',
-                    'value' => new TextLine\Value('Some text 1 & 2'),
-                ]),
-                new Field([
-                    'fieldDefIdentifier' => 'field_2_textline',
-                    'value' => new TextLine\Value('Some text 2'),
-                ]),
-            ],
-        ]);
-
         $fieldEncoderManagerMock
-            ->expects($this->exactly(2))
+            ->expects(self::exactly($expected))
             ->method('encode')
             ->withAnyParameters()
-            ->willReturn('Some text 1 & 2');
+            ->willReturn($fieldEncoderReturned);
 
-        $subject = new Encoder(
+        return new Encoder(
             $contentTypeServiceMock,
             $eventDispatcherMock,
             $fieldEncoderManagerMock,
             new EncoderHelper()
         );
-
-        $encodeResult = $subject->encode($content);
-
-        $expectedEncodeResult = '<?xml version="1.0"?>
-<response><field_1_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">Some text 1 &amp; 2</field_1_textline><field_2_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value">Some text 1 &amp; 2</field_2_textline></response>
-';
-
-        $this->assertEquals($expectedEncodeResult, $encodeResult);
     }
 
     /**

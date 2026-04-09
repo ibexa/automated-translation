@@ -45,5 +45,5 @@ parameters:
 		-
 			message: '#^Return type of call to method PHPUnit\\Framework\\MockObject\\MockBuilder\<Ibexa\\AutomatedTranslation\\Encoder\\Field\\FieldEncoderManager\>\:\:getMock\(\) contains unresolvable type\.$#'
 			identifier: method.unresolvableReturnType
-			count: 3
+			count: 2
 			path: tests/lib/EncoderTest.php
