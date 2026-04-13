@@ -79,18 +79,18 @@ class Encoder
 
     private FieldEncoderManager $fieldEncoderManager;
 
-    private EncoderHelper $encoderHelper;
+    private TextFieldCdataCleaner $textFieldCdataCleaner;
 
     public function __construct(
         ContentTypeService $contentTypeService,
         EventDispatcherInterface $eventDispatcher,
         FieldEncoderManager $fieldEncoderManager,
-        EncoderHelper $encoderHelper
+        TextFieldCdataCleaner $textFieldCdataCleaner
     ) {
         $this->contentTypeService = $contentTypeService;
         $this->eventDispatcher = $eventDispatcher;
         $this->fieldEncoderManager = $fieldEncoderManager;
-        $this->encoderHelper = $encoderHelper;
+        $this->textFieldCdataCleaner = $textFieldCdataCleaner;
     }
 
     public function encode(Content $content): string
@@ -122,7 +122,7 @@ class Encoder
 
         $encoder = new XmlEncoder();
         $payload = $encoder->encode($results, XmlEncoder::FORMAT);
-        $payload = $this->encoderHelper->clearCDATAInTextField($payload);
+        $payload = $this->textFieldCdataCleaner->clear($payload);
 
         // here Encoder has  decorated with CDATA, we don't want the CDATA
         return str_replace(
