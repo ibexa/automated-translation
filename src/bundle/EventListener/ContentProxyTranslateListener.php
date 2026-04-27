@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Bundle\AutomatedTranslation\EventListener;
 
 use Ibexa\AutomatedTranslation\Translator;
+use Ibexa\Bundle\AutomatedTranslation\Form\TranslationAddDataTransformer;
 use Ibexa\Contracts\AdminUi\Event\ContentProxyTranslateEvent;
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -54,6 +55,10 @@ class ContentProxyTranslateListener implements EventSubscriberInterface
         }
 
         if (!$request->query->has('translatorAlias')) {
+            return;
+        }
+
+        if ($request->query->get('translatorAlias') === TranslationAddDataTransformer::NO_SERVICE) {
             return;
         }
 

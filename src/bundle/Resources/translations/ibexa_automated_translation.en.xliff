@@ -6,6 +6,11 @@
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="6853900218e5e7555b9d3eae6e66f621b2b0d1f9" resname="automated_translation.no_service">
+        <source>No service</source>
+        <target state="new">No service</target>
+        <note>key: automated_translation.no_service</note>
+      </trans-unit>
       <trans-unit id="6cd2ce682c3546de9a86ff3390701d81e46a99e2" resname="ibexa.language.create.language_code">
         <source>Language code</source>
         <target state="new">Language code</target>

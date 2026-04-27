@@ -11,7 +11,6 @@ namespace Ibexa\Bundle\AutomatedTranslation\Form\Extension;
 use Ibexa\AdminUi\Form\Type\Content\Translation\TranslationAddType as BaseTranslationAddType;
 use Ibexa\AutomatedTranslation\ClientProvider;
 use Ibexa\Bundle\AutomatedTranslation\Form\TranslationAddDataTransformer;
-use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
 use Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationAddType extends AbstractTypeExtension
 {
@@ -29,12 +29,16 @@ class TranslationAddType extends AbstractTypeExtension
     /** @var \Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface */
     private $localeConverter;
 
+    private TranslatorInterface $translator;
+
     public function __construct(
         ClientProvider $clientProvider,
-        LocaleConverterInterface $localeConverter
+        LocaleConverterInterface $localeConverter,
+        TranslatorInterface $translator
     ) {
         $this->clientProvider = $clientProvider;
         $this->localeConverter = $localeConverter;
+        $this->translator = $translator;
     }
 
     public static function getExtendedTypes(): iterable
@@ -69,6 +73,13 @@ class TranslationAddType extends AbstractTypeExtension
             return;
         }
 
+        $choices = [];
+        $choices[$this->translator->trans('automated_translation.no_service', [], 'ibexa_automated_translation')] = TranslationAddDataTransformer::NO_SERVICE;
+
+        foreach ($this->clientProvider->getClients() as $client) {
+            $choices[$client->getServiceFullName()] = $client->getServiceAlias();
+        }
+
         $builder
             ->add(
                 'translatorAlias',
@@ -78,22 +89,9 @@ class TranslationAddType extends AbstractTypeExtension
                     'expanded' => false,
                     'multiple' => false,
                     'required' => false,
-                    'choices' => ['' => 'no-service'] + $this->clientProvider->getClients(),
-                    'choice_label' => static function ($client) {
-                        if ($client instanceof ClientInterface) {
-                            return ucfirst($client->getServiceFullName());
-                        }
-
-                        return $client;
-                    },
-                    'choice_value' => static function ($client) {
-                        if ($client instanceof ClientInterface) {
-                            return $client->getServiceAlias();
-                        }
-
-                        return '';
-                    },
-                    'disabled' => true,
+                    'choices' => $choices,
+                    'disabled' => false,
+                    'placeholder' => false,
                 ]
             );
         $builder->addModelTransformer(new TranslationAddDataTransformer());

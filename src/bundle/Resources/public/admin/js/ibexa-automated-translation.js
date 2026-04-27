@@ -45,6 +45,7 @@
             }
 
             const dropdownWrapper = translatorSelect.closest('.ibexa-dropdown');
+            const NO_SERVICE = 'no_service';
 
             if (dropdownWrapper) {
                 const dropdownInstance = ibexa.helpers.objectInstances.getInstance(dropdownWrapper);
@@ -64,11 +65,8 @@
                         return;
                     }
 
-                    // Values are JSON-stringified → remove quotes
-                    value = value.replace(/"/g, '');
-
                     // Always allow "no-service"
-                    if (value === 'no-service') {
+                    if (value === NO_SERVICE) {
                         dropdownInstance.enableOption(value);
                         hasAnyEnabled = true;
                         return;
@@ -100,18 +98,18 @@
                 const selectElement = translatorSelect;
                 const currentValue = selectElement.value;
 
-                if (currentValue && currentValue !== 'no-service') {
+                if (currentValue && currentValue !== NO_SERVICE) {
                     const options = dropdownInstance.itemsListContainer.querySelectorAll('.ibexa-dropdown__item');
 
                     const currentOption = [...options].find(
                         (opt) => opt.dataset.value === currentValue
                     );
 
-                    const isNowDisabled = currentOption?.classList.contains('ibexa-dropdown__item--disabled');
+                    const isNowDisabled = dropdownInstance.isOptionDisabled(currentValue);
 
                     if (isNowDisabled) {
                         dropdownInstance.clearCurrentSelection(false);
-                        dropdownInstance.selectOption('');
+                        dropdownInstance.selectOption(NO_SERVICE);
                     }
                 }
             }
