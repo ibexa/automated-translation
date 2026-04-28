@@ -11,108 +11,100 @@
 
         userCheckedStateMap.set(modal, true);
 
-        const handleLanguageChange = () => {
-            const baseLang = baseLanguageSelect?.value;
-            const targetLang = languageSelect?.value;
-            const translationCheckbox = translatorSelect.closest('.ibexa-input--checkbox');
+        const getSupportedLanguages = (element, value) => {
+            const attr = element.getAttribute(
+                `data-supported-translation-languages-${value}`
+            ) || '';
 
-            if (translationCheckbox) {
-                const supportedLanguages = translationCheckbox.getAttribute(
-                    `data-supported-translation-languages-${translationCheckbox.value}`
-                ) || '';
+            return new Set(attr ? attr.trim().split(/\s+/) : []);
+        };
 
-                const supportedList = supportedLanguages.split(' ');
+        const isLanguageSupported = (supportedSet, baseLang, targetLang) => {
+            return (
+                baseLang &&
+                targetLang &&
+                supportedSet.has(baseLang) &&
+                supportedSet.has(targetLang)
+            );
+        };
 
-                const shouldBeEnabled =
-                    baseLang &&
-                    targetLang &&
-                    supportedList.includes(baseLang) &&
-                    supportedList.includes(targetLang);
+        const updateCheckbox = (modal, translatorSelect, baseLang, targetLang) => {
+            const checkbox = translatorSelect.closest('.ibexa-input--checkbox');
 
-                // Store user state before disabling
-                if (!translationCheckbox.disabled) {
-                    userCheckedStateMap.set(modal, translationCheckbox.checked);
-                }
-
-                translationCheckbox.disabled = !shouldBeEnabled;
-
-                if (shouldBeEnabled) {
-                    const storedState = userCheckedStateMap.get(modal);
-                    translationCheckbox.checked = storedState === undefined ? true : storedState;
-                } else {
-                    translationCheckbox.checked = false;
-                }
+            if (!checkbox) {
+                return;
             }
 
+            const supportedSet = getSupportedLanguages(checkbox, checkbox.value);
+            const shouldEnable = isLanguageSupported(supportedSet, baseLang, targetLang);
+
+            if (!checkbox.disabled) {
+                userCheckedStateMap.set(modal, checkbox.checked);
+            }
+
+            checkbox.disabled = !shouldEnable;
+
+            if (shouldEnable) {
+                const stored = userCheckedStateMap.get(modal);
+                checkbox.checked = stored === undefined ? true : stored;
+            } else {
+                checkbox.checked = false;
+            }
+        };
+
+        const updateDropdown = (translatorSelect, baseLang, targetLang) => {
             const dropdownWrapper = translatorSelect.closest('.ibexa-dropdown');
             const NO_SERVICE = 'no_service';
 
-            if (dropdownWrapper) {
-                const dropdownInstance = ibexa.helpers.objectInstances.getInstance(dropdownWrapper);
+            if (!dropdownWrapper) {
+                return;
+            }
 
-                if (!dropdownInstance) {
+            const dropdown = ibexa.helpers.objectInstances.getInstance(dropdownWrapper);
+            if (!dropdown) {
+                return;
+            }
+
+            const options = dropdown.itemsListContainer.querySelectorAll('.ibexa-dropdown__item');
+            let hasAnyEnabled = false;
+
+            options.forEach((option) => {
+                const value = option.dataset.value;
+                if (!value) return;
+
+                if (value === NO_SERVICE) {
+                    dropdown.enableOption(value);
+                    hasAnyEnabled = true;
                     return;
                 }
 
-                const options = dropdownInstance.itemsListContainer.querySelectorAll('.ibexa-dropdown__item');
+                const supportedSet = getSupportedLanguages(translatorSelect, value);
+                const isEnabled = isLanguageSupported(supportedSet, baseLang, targetLang);
 
-                let hasAnyEnabled = false;
-
-                options.forEach((option) => {
-                    let value = option.dataset.value;
-
-                    if (!value) {
-                        return;
-                    }
-
-                    // Always allow "no-service"
-                    if (value === NO_SERVICE) {
-                        dropdownInstance.enableOption(value);
-                        hasAnyEnabled = true;
-                        return;
-                    }
-
-                    const supportedLanguagesAttr = translatorSelect.getAttribute(
-                        `data-supported-translation-languages-${value}`
-                    ) || '';
-
-                    const supportedList = supportedLanguagesAttr.split(' ');
-
-                    const isEnabled =
-                        baseLang &&
-                        targetLang &&
-                        supportedList.includes(baseLang) &&
-                        supportedList.includes(targetLang);
-
-                    if (isEnabled) {
-                        dropdownInstance.enableOption(value);
-                        hasAnyEnabled = true;
-                    } else {
-                        dropdownInstance.disableOption(value);
-                    }
-                });
-
-                // Disable whole dropdown if nothing is selectable
-                dropdownWrapper.classList.toggle('ibexa-dropdown--disabled', !hasAnyEnabled);
-
-                const selectElement = translatorSelect;
-                const currentValue = selectElement.value;
-
-                if (currentValue && currentValue !== NO_SERVICE) {
-                    const options = dropdownInstance.itemsListContainer.querySelectorAll('.ibexa-dropdown__item');
-
-                    const currentOption = [...options].find(
-                        (opt) => opt.dataset.value === currentValue
-                    );
-
-                    const isNowDisabled = dropdownInstance.isOptionDisabled(currentValue);
-
-                    if (isNowDisabled) {
-                        dropdownInstance.clearCurrentSelection(false);
-                        dropdownInstance.selectOption(NO_SERVICE);
-                    }
+                if (isEnabled) {
+                    dropdown.enableOption(value);
+                    hasAnyEnabled = true;
+                } else {
+                    dropdown.disableOption(value);
                 }
+            });
+
+            dropdownWrapper.classList.toggle('ibexa-dropdown--disabled', !hasAnyEnabled);
+
+            const currentValue = translatorSelect.value;
+
+            if (currentValue && currentValue !== NO_SERVICE && dropdown.isOptionDisabled(currentValue)) {
+                dropdown.clearCurrentSelection(false);
+                dropdown.selectOption(NO_SERVICE);
             }
+        };
+
+        const handleLanguageChange = () => {
+            const baseLang = baseLanguageSelect?.value;
+            const targetLang = languageSelect?.value;
+
+            updateCheckbox(modal, translatorSelect, baseLang, targetLang);
+            updateDropdown(translatorSelect, baseLang, targetLang);
         };
 
         if (baseLanguageSelect && languageSelect && translatorSelect) {
