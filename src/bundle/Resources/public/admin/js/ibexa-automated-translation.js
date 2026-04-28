@@ -66,7 +66,6 @@
             }
 
             const options = dropdown.itemsListContainer.querySelectorAll('.ibexa-dropdown__item');
-            let hasAnyEnabled = false;
 
             options.forEach((option) => {
                 const value = option.dataset.value;
@@ -74,7 +73,6 @@
 
                 if (value === NO_SERVICE) {
                     dropdown.enableOption(value);
-                    hasAnyEnabled = true;
                     return;
                 }
 
@@ -83,13 +81,10 @@
 
                 if (isEnabled) {
                     dropdown.enableOption(value);
-                    hasAnyEnabled = true;
                 } else {
                     dropdown.disableOption(value);
                 }
             });
-
-            dropdownWrapper.classList.toggle('ibexa-dropdown--disabled', !hasAnyEnabled);
 
             const currentValue = translatorSelect.value;
 
