@@ -26,6 +26,8 @@ class Deepl implements ClientInterface
 
     private string $authKey;
 
+    private bool $apiFree = false;
+
     /** @var array<string, string> */
     private array $languageMap;
 
@@ -56,6 +58,14 @@ class Deepl implements ClientInterface
             throw new ClientNotConfiguredException('authKey is required');
         }
         $this->authKey = $configuration['authKey'];
+
+        if (array_key_exists('apiFree', $configuration)) {
+            $this->apiFree = filter_var(
+                $configuration['apiFree'],
+                FILTER_VALIDATE_BOOLEAN,
+                FILTER_NULL_ON_FAILURE
+            ) ?? false;
+        }
     }
 
     public function translate(string $payload, ?string $from, string $to): string
@@ -72,9 +82,13 @@ class Deepl implements ClientInterface
             ];
         }
 
+        $baseUri = $this->apiFree
+            ? 'https://api-free.deepl.com'
+            : 'https://api.deepl.com';
+
         $http = new Client(
             [
-                'base_uri' => 'https://api.deepl.com',
+                'base_uri' => $baseUri,
                 'timeout' => 5.0,
                 'headers' => [
                     'Authorization' => 'DeepL-Auth-Key ' . $this->authKey,
