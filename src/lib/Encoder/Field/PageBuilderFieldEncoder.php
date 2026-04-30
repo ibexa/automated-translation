@@ -10,6 +10,7 @@ namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
 use Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException;
+use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value as APIValue;
@@ -26,12 +27,16 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
 
     private BlockDefinitionFactoryInterface $blockDefinitionFactory;
 
+    private TextFieldCdataCleaner $textFieldCdataCleaner;
+
     public function __construct(
         BlockAttributeEncoderManager $blockAttributeEncoderManager,
-        BlockDefinitionFactoryInterface $blockDefinitionFactory
+        BlockDefinitionFactoryInterface $blockDefinitionFactory,
+        TextFieldCdataCleaner $textFieldCdataCleaner
     ) {
         $this->blockAttributeEncoderManager = $blockAttributeEncoderManager;
         $this->blockDefinitionFactory = $blockDefinitionFactory;
+        $this->textFieldCdataCleaner = $textFieldCdataCleaner;
     }
 
     public function canEncode(Field $field): bool
@@ -85,12 +90,11 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $payload = $encoder->encode($blocks, XmlEncoder::FORMAT, [
             XmlEncoder::ROOT_NODE_NAME => 'blocks',
         ]);
-
-        $payload = str_replace('<?xml version="1.0"?>' . "\n", '', $payload);
+        $payload = $this->textFieldCdataCleaner->clear($payload);
 
         $payload = str_replace(
-            ['<![CDATA[', ']]>'],
-            ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
+            ['<?xml version="1.0"?>' . "\n", '<![CDATA[', ']]>'],
+            ['', '<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
             $payload
         );
 
