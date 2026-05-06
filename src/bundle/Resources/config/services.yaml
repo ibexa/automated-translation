@@ -62,3 +62,5 @@ services:
             - { name: form.type_extension, extended_type: Ibexa\AdminUi\Form\Type\Language\LanguageCreateType }
 
     Ibexa\Bundle\AutomatedTranslation\EventListener\ContentProxyTranslateListener: ~
+
+    Ibexa\AutomatedTranslation\TextFieldCdataCleaner: ~

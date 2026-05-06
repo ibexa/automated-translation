@@ -32,6 +32,7 @@
     "require": {
         "php": "^8.3",
         "ext-libxml": "*",
+        "ext-dom": "*",
         "guzzlehttp/guzzle": "^7.9",
         "ibexa/admin-ui": "~5.0.0@dev",
         "ibexa/core": "~5.0.0@dev",
