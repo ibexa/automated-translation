@@ -25,7 +25,7 @@ parameters:
 			path: src/bundle/Form/Extension/ContentEditType.php
 
 		-
-			message: '#^Class Ibexa\\Bundle\\AutomatedTranslation\\Form\\TranslationAddDataTransformer implements generic interface Symfony\\Component\\Form\\DataTransformerInterface but does not specify its types\: T, R$#'
+			message: '#^Class Ibexa\\Bundle\\AutomatedTranslation\\Form\\TranslationAddDataTransformer implements generic interface Symfony\\Component\\Form\\DataTransformerInterface but does not specify its types\: TValue, TTransformedValue$#'
 			identifier: missingType.generics
 			count: 1
 			path: src/bundle/Form/TranslationAddDataTransformer.php
