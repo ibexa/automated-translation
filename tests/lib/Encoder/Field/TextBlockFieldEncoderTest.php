@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 
 use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
+use Ibexa\AutomatedTranslation\Encoder\Normalizer\PlainTextTranslatedValueNormalizer;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\TextBlock;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +25,9 @@ final class TextBlockFieldEncoderTest extends TestCase
             'value' => new TextBlock\Value(self::TEXT_BLOCK_VALUE),
         ]);
 
-        $subject = new TextBlockFieldEncoder();
+        $subject = new TextBlockFieldEncoder(
+            new PlainTextTranslatedValueNormalizer()
+        );
         $result = $subject->encode($field);
 
         $this->assertEquals(self::TEXT_BLOCK_VALUE, $result);
@@ -37,10 +40,30 @@ final class TextBlockFieldEncoderTest extends TestCase
             'value' => new TextBlock\Value(self::TEXT_BLOCK_VALUE),
         ]);
 
-        $subject = new TextBlockFieldEncoder();
+        $subject = new TextBlockFieldEncoder(
+            new PlainTextTranslatedValueNormalizer()
+        );
         $result = $subject->decode(self::TEXT_BLOCK_VALUE, $field->value);
 
         $this->assertInstanceOf(TextBlock\Value::class, $result);
         $this->assertEquals(new TextBlock\Value(self::TEXT_BLOCK_VALUE), $result);
+    }
+
+    public function testDecodeNormalizesTranslatedHtmlEntities(): void
+    {
+        $field = new Field([
+            'fieldDefIdentifier' => 'field_1_TextBlock',
+            'value' => new TextBlock\Value(self::TEXT_BLOCK_VALUE),
+        ]);
+
+        $subject = new TextBlockFieldEncoder(
+            new PlainTextTranslatedValueNormalizer()
+        );
+        $result = $subject->decode(
+            ' foo &amp; &quot;bar&quot; &#039;baz&#039; ',
+            $field->value
+        );
+
+        $this->assertEquals(new TextBlock\Value("foo & \"bar\" 'baz'"), $result);
     }
 }
