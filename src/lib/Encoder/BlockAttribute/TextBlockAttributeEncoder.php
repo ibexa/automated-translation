@@ -8,11 +8,20 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\BlockAttribute;
 
+use Ibexa\AutomatedTranslation\Encoder\Normalizer\PlainTextTranslatedValueNormalizer;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface;
 
 final class TextBlockAttributeEncoder implements BlockAttributeEncoderInterface
 {
     private const TYPE = 'text';
+
+    private PlainTextTranslatedValueNormalizer $translatedValueNormalizer;
+
+    public function __construct(
+        PlainTextTranslatedValueNormalizer $translatedValueNormalizer
+    ) {
+        $this->translatedValueNormalizer = $translatedValueNormalizer;
+    }
 
     public function canEncode(string $type): bool
     {
@@ -31,7 +40,7 @@ final class TextBlockAttributeEncoder implements BlockAttributeEncoderInterface
 
     public function decode(string $value): string
     {
-        return $value;
+        return $this->translatedValueNormalizer->normalize($value);
     }
 }
 

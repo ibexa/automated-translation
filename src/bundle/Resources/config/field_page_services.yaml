@@ -7,6 +7,8 @@ services:
     _instanceof:
         Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface:
             tags: [ ibexa.automated_translation.block_attribute_encoder ]
+
+    Ibexa\AutomatedTranslation\Encoder\Normalizer\PlainTextTranslatedValueNormalizer: ~
     
     Ibexa\AutomatedTranslation\Encoder\Field\PageBuilderFieldEncoder:
         arguments:

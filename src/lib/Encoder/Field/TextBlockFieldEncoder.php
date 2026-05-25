@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
+use Ibexa\AutomatedTranslation\Encoder\Normalizer\PlainTextTranslatedValueNormalizer;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
@@ -16,6 +17,14 @@ use Ibexa\Core\FieldType\Value;
 
 final class TextBlockFieldEncoder implements FieldEncoderInterface
 {
+    private PlainTextTranslatedValueNormalizer $translatedValueNormalizer;
+
+    public function __construct(
+        PlainTextTranslatedValueNormalizer $translatedValueNormalizer
+    ) {
+        $this->translatedValueNormalizer = $translatedValueNormalizer;
+    }
+
     public function canEncode(Field $field): bool
     {
         return $field->value instanceof TextBlockValue;
@@ -33,7 +42,7 @@ final class TextBlockFieldEncoder implements FieldEncoderInterface
 
     public function decode(string $value, $previousFieldValue): Value
     {
-        $value = trim($value);
+        $value = $this->translatedValueNormalizer->normalize($value);
 
         if (strlen($value) === 0) {
             throw new EmptyTranslatedFieldException();
