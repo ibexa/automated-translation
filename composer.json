@@ -96,7 +96,21 @@
     },
     "config": {
         "sort-packages": true,
-        "allow-plugins": false
+        "allow-plugins": false,
+        "audit": {
+            "ignore": {
+                "PKSA-sjvz-tbbr-vwth": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-h8hf-ytnd-5t9q": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-wwb1-81rc-pd65": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-kvv6-36cr-fkzb": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-n14z-jjjg-g8vd": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-3mcc-k66d-pydb": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-gw7n-z4yx-7xjt": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-dpx1-78wg-1kqs": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-21g2-dzjv-sky5": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8",
+                "PKSA-2rbx-bjdx-4d4d": "The affected version of 3rd party component is installed on PHP 7.4. There's no alternative supporting PHP 7.4. Consider upgrading to PHP 8"
+            }
+        }
     },
     "extra": {
         "branch-alias": {
