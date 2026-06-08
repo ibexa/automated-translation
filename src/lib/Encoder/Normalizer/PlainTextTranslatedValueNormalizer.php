@@ -12,8 +12,8 @@ final class PlainTextTranslatedValueNormalizer
 {
     public function normalize(string $value): string
     {
-        $decodedValue = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $trimmedValue = trim($value);
 
-        return trim($decodedValue);
+        return html_entity_decode($trimmedValue, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }

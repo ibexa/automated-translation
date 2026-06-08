@@ -44,5 +44,6 @@ final class PlainTextTranslatedValueNormalizerTest extends TestCase
         yield 'unknown entity' => ['foo &broken; bar', 'foo &broken; bar'];
         yield 'other html5 entities' => ['foo &copy; &nbsp; bar', "foo \u{00A9} \u{00A0} bar"];
         yield 'surrounding whitespace' => [' translated foo ', 'translated foo'];
+        yield 'encoded surrounding whitespace' => ['&#32;translated foo&#32;', ' translated foo '];
     }
 }
