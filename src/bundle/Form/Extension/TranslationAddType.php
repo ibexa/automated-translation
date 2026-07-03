@@ -23,11 +23,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationAddType extends AbstractTypeExtension
 {
-    /** @var \Ibexa\AutomatedTranslation\ClientProvider */
-    private $clientProvider;
+    private ClientProvider $clientProvider;
 
-    /** @var \Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface */
-    private $localeConverter;
+    private LocaleConverterInterface $localeConverter;
 
     private TranslatorInterface $translator;
 
@@ -74,7 +72,12 @@ class TranslationAddType extends AbstractTypeExtension
         }
 
         $choices = [];
-        $choices[$this->translator->trans('automated_translation.no_service', [], 'ibexa_automated_translation')] = TranslationAddDataTransformer::NO_SERVICE;
+        $noServiceLabel = $this->translator->trans(
+            'automated_translation.no_service',
+            [],
+            'ibexa_automated_translation'
+        );
+        $choices[$noServiceLabel] = TranslationAddDataTransformer::NO_SERVICE;
 
         foreach ($this->clientProvider->getClients() as $client) {
             $choices[$client->getServiceFullName()] = $client->getServiceAlias();
