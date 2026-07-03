@@ -46,6 +46,7 @@
 
             if (shouldEnable) {
                 const stored = userCheckedStateMap.get(modal);
+                
                 checkbox.checked = stored === undefined ? true : stored;
             } else {
                 checkbox.checked = false;
@@ -61,6 +62,7 @@
             }
 
             const dropdown = ibexa.helpers.objectInstances.getInstance(dropdownWrapper);
+            
             if (!dropdown) {
                 return;
             }
@@ -104,6 +106,7 @@
 
         if (baseLanguageSelect && languageSelect && translatorSelect) {
             const translationCheckbox = translatorSelect.closest('.ibexa-input--checkbox');
+            
             if (translationCheckbox && !translationCheckbox.disabled) {
                 translationCheckbox.checked = true;
             }
