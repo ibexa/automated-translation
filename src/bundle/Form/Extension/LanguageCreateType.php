@@ -39,7 +39,7 @@ class LanguageCreateType extends AbstractTypeExtension
             'languageCode',
             ChoiceType::class,
             [
-                'label' => /* @Desc("Language code") */ 'ibexa.language.create.language_code',
+                'label' => /** @Desc("Language code") */ 'ibexa.language.create.language_code',
                 'required' => false,
                 'choices' => array_combine($this->localeList, $this->localeList),
                 'translation_domain' => 'ibexa_automated_translation',
