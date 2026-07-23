@@ -14,6 +14,8 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class TranslationAddDataTransformer implements DataTransformerInterface
 {
+    public const NO_SERVICE = 'no_service';
+
     /**
      * @param \Ibexa\AdminUi\Form\Data\Content\Translation\TranslationAddData $value
      *
@@ -30,6 +32,12 @@ class TranslationAddDataTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value): TranslationAddData
     {
+        $alias = $value->getTranslatorAlias();
+        if ($alias === self::NO_SERVICE) {
+            $alias = null;
+        }
+        $value->setTranslatorAlias($alias);
+
         return $value;
     }
 }
