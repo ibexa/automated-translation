@@ -12,17 +12,14 @@ use Ibexa\AdminUi\Form\Data\Content\Translation\TranslationAddData as BaseTransl
 
 class TranslationAddData extends BaseTranslationAddData
 {
-    /** @var string|bool */
-    protected $translatorAlias;
+    protected ?string $translatorAlias = null;
 
-    /** @return string|bool */
-    public function getTranslatorAlias()
+    public function getTranslatorAlias(): ?string
     {
         return $this->translatorAlias;
     }
 
-    /** @param string|bool $translatorAlias */
-    public function setTranslatorAlias($translatorAlias): void
+    public function setTranslatorAlias(?string $translatorAlias): void
     {
         $this->translatorAlias = $translatorAlias;
     }
