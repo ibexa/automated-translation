@@ -12,9 +12,12 @@ use GuzzleHttp\Client;
 use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
+use Psr\Log\LoggerAwareInterface;
 
-class Deepl implements ClientInterface
+class Deepl implements ClientInterface, LoggerAwareInterface
 {
+    use TranslationTrafficLoggerTrait;
+
     /**
      * List of available codes https://developers.deepl.com/docs/resources/supported-languages.
      */
@@ -48,7 +51,7 @@ class Deepl implements ClientInterface
     }
 
     /**
-     * @param array{authKey?: string} $configuration
+     * @param array{authKey?: string, debug?: bool|int|string} $configuration
      */
     public function setConfiguration(array $configuration): void
     {
@@ -56,10 +59,14 @@ class Deepl implements ClientInterface
             throw new ClientNotConfiguredException('authKey is required');
         }
         $this->authKey = $configuration['authKey'];
+
+        $this->configureDebug($configuration);
     }
 
     public function translate(string $payload, ?string $from, string $to): string
     {
+        $this->logTranslationRequest($payload, $from, $to);
+
         $parameters = [
             'target_lang' => $this->normalized($to),
             'tag_handling' => 'xml',
@@ -84,8 +91,11 @@ class Deepl implements ClientInterface
         $response = $http->post('/v2/translate', ['form_params' => $parameters]);
         // May use the native json method from guzzle
         $json = json_decode($response->getBody()->getContents());
+        $translatedText = $json->translations[0]->text;
 
-        return $json->translations[0]->text;
+        $this->logTranslationResponse($translatedText, $response->getStatusCode());
+
+        return $translatedText;
     }
 
     public function supportsLanguage(string $languageCode): bool
