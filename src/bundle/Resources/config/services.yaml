@@ -8,6 +8,10 @@ services:
         Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface:
             tags: [ ibexa.automated_translation.field_encoder ]
 
+        Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface:
+            tags:
+                - { name: monolog.logger, channel: automated_translation }
+
     # field encoder
     Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder: ~
 
