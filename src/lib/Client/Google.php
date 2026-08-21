@@ -11,14 +11,11 @@ namespace Ibexa\AutomatedTranslation\Client;
 use GuzzleHttp\Client;
 use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
+use Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
-class Google implements ClientInterface, LoggerAwareInterface
+class Google implements ClientInterface
 {
-    use LoggerAwareTrait;
-
     /**
      * Google List of available code https://cloud.google.com/translate/docs/languages.
      */
@@ -33,6 +30,15 @@ class Google implements ClientInterface, LoggerAwareInterface
 
     private string $apiKey;
 
+    private TranslationTrafficLogger $trafficLogger;
+
+    private bool $debug = false;
+
+    public function __construct(TranslationTrafficLogger $trafficLogger)
+    {
+        $this->trafficLogger = $trafficLogger;
+    }
+
     public function getServiceAlias(): string
     {
         return 'google';
@@ -44,7 +50,7 @@ class Google implements ClientInterface, LoggerAwareInterface
     }
 
     /**
-     * @param array{apiKey?: string} $configuration
+     * @param array{apiKey?: string, debug?: bool|int|string} $configuration
      */
     public function setConfiguration(array $configuration): void
     {
@@ -52,17 +58,13 @@ class Google implements ClientInterface, LoggerAwareInterface
             throw new ClientNotConfiguredException('authKey is required');
         }
         $this->apiKey = $configuration['apiKey'];
+
+        $this->debug = $this->trafficLogger->isDebugEnabled($configuration);
     }
 
     public function translate(string $payload, ?string $from, string $to): string
     {
-        if ($this->logger) {
-            $this->logger->log('info', sprintf(
-                'Calling %s for translated content (length %s)',
-                $this->getServiceFullName(),
-                strlen($payload)
-            ));
-        }
+        $this->trafficLogger->logRequest($this, $payload, $from, $to, $this->debug);
 
         $parameters = [
             'key' => $this->apiKey,
@@ -87,13 +89,7 @@ class Google implements ClientInterface, LoggerAwareInterface
         $json = json_decode($response->getBody()->getContents());
         $translatedText = $json->data->translations[0]->translatedText;
 
-        if ($this->logger) {
-            $this->logger->log('info', sprintf(
-                '%s has returned translated content (length %s)',
-                $this->getServiceFullName(),
-                strlen($translatedText)
-            ));
-        }
+        $this->trafficLogger->logResponse($this, $translatedText, $response->getStatusCode(), $this->debug);
 
         return $translatedText;
     }
