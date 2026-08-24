@@ -45,7 +45,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *      <response>
  *             <title>The string value</title>
  *             <description>
- *                  <![CDATA[<?xml version="1.0" encoding="UTF-8"?><section><para>lorem ipsum</para></section>]]>
+ *                  <![CDATA[<section><para>lorem ipsum</para></section>]]>
  *              </description>
  *      </response>
  *
@@ -70,8 +70,6 @@ class Encoder
      * Use to fake the <![CDATA[ something ]]> to <fakecdata> something </fakecdata>.
      */
     private const CDATA_FAKER_TAG = 'fakecdata';
-
-    private const XML_MARKUP = '<?xml version="1.0" encoding="UTF-8"?>';
 
     private ContentTypeService $contentTypeService;
 
@@ -140,7 +138,7 @@ class Encoder
         $encoder = new XmlEncoder();
         $data = str_replace(
             ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
-            ['<![CDATA[' . self::XML_MARKUP, ']]>'],
+            ['<![CDATA[', ']]>'],
             $xml
         );
 

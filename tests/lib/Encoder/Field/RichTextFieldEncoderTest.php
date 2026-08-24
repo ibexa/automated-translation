@@ -70,6 +70,32 @@ class RichTextFieldEncoderTest extends TestCase
         $this->assertEquals(new RichText\Value($xml1), $result);
     }
 
+    public function testDecodeRestoresUtf8Encoding(): void
+    {
+        $decodedXml = '<section xmlns="http://docbook.org/ns/docbook" version="5.0-variant ezpublish-1.0">'
+            . '<para>Café &amp; crème — Привет</para></section>';
+
+        $richTextEncoderMock = $this->getMockBuilder(RichTextEncoder::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $richTextEncoderMock
+            ->expects($this->atLeastOnce())
+            ->method('decode')
+            ->withAnyParameters()
+            ->willReturn($decodedXml);
+
+        $subject = new RichTextFieldEncoder($richTextEncoderMock);
+        $result = $subject->decode($decodedXml, new RichText\Value($decodedXml));
+
+        $storedXml = (string) $result;
+
+        self::assertStringContainsString('encoding="UTF-8"', $storedXml);
+        self::assertStringContainsString('Café', $storedXml);
+        self::assertStringContainsString('Привет', $storedXml);
+        self::assertStringNotContainsString('&#x', $storedXml);
+    }
+
     protected function getFixture(string $name): string
     {
         return (string) file_get_contents(__DIR__ . '/../../../fixtures/' . $name);

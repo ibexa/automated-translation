@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
+use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
@@ -48,7 +49,12 @@ final class RichTextFieldEncoder implements FieldEncoderInterface
             throw new EmptyTranslatedFieldException();
         }
 
-        return new RichTextValue($decodedValue);
+        $document = new DOMDocument();
+        $document->loadXML($decodedValue);
+        // encoding has to be set after loadXML(), which resets it
+        $document->encoding = 'UTF-8';
+
+        return new RichTextValue($document);
     }
 }
 
