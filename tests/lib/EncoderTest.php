@@ -18,11 +18,16 @@ use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
+use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class EncoderTest extends TestCase
 {
+    use WellFormedXmlAssertionTrait;
+
+    private const LANGUAGE_CODE = 'eng-GB';
+
     public function testEncodeWithoutFields(): void
     {
         $contentTypeServiceMock = $this->getContentTypeServiceMock();
@@ -112,6 +117,80 @@ XML;
 ';
 
         self::assertEquals($expectedEncodeResult, $encodeResult);
+    }
+
+    public function testEncodePageFieldKeepsFakeCdata(): void
+    {
+        $blocksPayload = '<blocks><item key="1"><name>Code</name><attributes>'
+            . '<content type="text">Tom &amp; Jerry</content>'
+            . '</attributes></item></blocks>';
+
+        $contentTypeServiceMock = $this->getContentTypeServiceMock();
+        $contentType = $this->getMockForAbstractClass(
+            ContentType::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ['getFieldDefinition']
+        );
+        $fieldDefinition = $this->getMockBuilder(FieldDefinition::class)
+            ->setConstructorArgs([
+                [
+                    'fieldTypeIdentifier' => 'ezlandingpage',
+                    'isTranslatable' => true,
+                ],
+            ])
+            ->getMockForAbstractClass();
+
+        $contentType->method('getFieldDefinition')->willReturn($fieldDefinition);
+        $contentTypeServiceMock->method('loadContentType')->willReturn($contentType);
+
+        $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
+        $fieldEncoderManagerMock
+            ->method('encode')
+            ->withAnyParameters()
+            ->willReturn($blocksPayload);
+
+        $subject = new Encoder(
+            $contentTypeServiceMock,
+            $this->getMockBuilder(EventDispatcherInterface::class)->getMock(),
+            $fieldEncoderManagerMock,
+            new TextFieldCdataCleaner()
+        );
+
+        $payload = $subject->encode($this->createContent(['field_landing_page' => new LandingPageValue()]));
+
+        self::assertStringContainsString('<fakecdata>', $payload);
+        self::assertStringNotContainsString('&lt;blocks', $payload);
+        $this->assertWellFormedXml($payload);
+    }
+
+    /**
+     * @param array<string, \Ibexa\Core\FieldType\Value> $fieldValues
+     */
+    private function createContent(array $fieldValues): Content
+    {
+        $fields = [];
+        foreach ($fieldValues as $identifier => $value) {
+            $fields[] = new Field([
+                'fieldDefIdentifier' => $identifier,
+                'languageCode' => self::LANGUAGE_CODE,
+                'value' => $value,
+            ]);
+        }
+
+        return new Content([
+            'versionInfo' => new VersionInfo([
+                'contentInfo' => new ContentInfo([
+                    'id' => 1,
+                    'contentTypeId' => 123,
+                    'mainLanguageCode' => self::LANGUAGE_CODE,
+                ]),
+            ]),
+            'internalFields' => $fields,
+        ]);
     }
 
     /**
