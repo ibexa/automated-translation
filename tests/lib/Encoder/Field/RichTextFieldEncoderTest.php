@@ -12,6 +12,7 @@ use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
+use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\FieldTypeRichText\FieldType\RichText;
 use PHPUnit\Framework\TestCase;
 
@@ -77,6 +78,25 @@ class RichTextFieldEncoderTest extends TestCase
         $document->loadXML($xml);
 
         return new RichText\Value($document);
+    }
+
+    public function testDecodeRestoresUtf8Encoding(): void
+    {
+        $decodedXml = '<section xmlns="http://docbook.org/ns/docbook" version="5.0-variant ezpublish-1.0">'
+            . '<para>Café &amp; crème — Привет</para></section>';
+
+        $configResolver = $this->createMock(ConfigResolverInterface::class);
+        $configResolver->method('getParameter')->willReturn([]);
+
+        $subject = new RichTextFieldEncoder(new RichTextEncoder($configResolver));
+        $result = $subject->decode($decodedXml, $this->createRichTextValue($decodedXml));
+
+        $storedXml = (string) $result;
+
+        self::assertStringContainsString('encoding="UTF-8"', $storedXml);
+        self::assertStringContainsString('Café', $storedXml);
+        self::assertStringContainsString('Привет', $storedXml);
+        self::assertStringNotContainsString('&#x', $storedXml);
     }
 
     protected function getFixture(string $name): string

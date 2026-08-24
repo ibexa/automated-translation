@@ -8,23 +8,32 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\AutomatedTranslation;
 
+use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
+use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
+use Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder;
+use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
+use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
+use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
+use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
+use Ibexa\Tests\AutomatedTranslation\Stubs\MarkupFieldEncoderStub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class EncoderTest extends TestCase
 {
-    use WellFormedXmlAssertionTrait;
+    use WellFormedXmlAssertTrait;
 
     private const LANGUAGE_CODE = 'eng-GB';
 
@@ -119,6 +128,82 @@ XML;
         self::assertEquals($expectedEncodeResult, $encodeResult);
     }
 
+    public function testDecodeFakeCdataDoesNotPrependXmlDeclaration(): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent(['field_1_textline' => new TextLine\Value('Some text 1 & 2')]);
+
+        // the bare '&' parses only because decode() turns the faker tag into a CDATA section first
+        $payload = '<?xml version="1.0"?>
+<response><field_1_textline type="Ibexa\\Core\\FieldType\\TextLine\\Value"><fakecdata>Some text 1 & 2</fakecdata></field_1_textline></response>
+';
+
+        $result = $subject->decode($payload, $content);
+
+        self::assertStringNotContainsString('<?xml', (string) $result['field_1_textline']);
+        self::assertSame('Some text 1 & 2', (string) $result['field_1_textline']);
+    }
+
+    public function testEncodeTextLineWithSpecialCharactersIsWellFormed(): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent(['field_1_textline' => new TextLine\Value('Tom & Jerry <3')]);
+
+        $payload = $subject->encode($content);
+
+        self::assertStringNotContainsString('fakecdata', $payload);
+        self::assertStringContainsString('Tom &amp; Jerry &lt;3', $payload);
+        self::assertWellFormedXml($payload);
+    }
+
+    /**
+     * @dataProvider provideSpecialCharacterValues
+     */
+    public function testEncodeDecodeRoundTripPreservesSpecialCharacters(string $value): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent(['field_1_textline' => new TextLine\Value($value)]);
+
+        $payload = $subject->encode($content);
+        self::assertWellFormedXml($payload);
+
+        $result = $subject->decode($payload, $content);
+
+        self::assertSame($value, (string) $result['field_1_textline']);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public function provideSpecialCharacterValues(): iterable
+    {
+        yield 'ampersand' => ['Tom & Jerry'];
+        yield 'lower than' => ['a < b'];
+        yield 'greater than' => ['b > a'];
+        yield 'quotes' => ['He said "hi" and \'bye\''];
+        yield 'accented' => ['Café & crème'];
+        yield 'cyrillic' => ['Привет & мир'];
+        yield 'entity looking text' => ['5 &amp; 6'];
+        yield 'mixed' => ['Café <b>& "crème"</b> — Привет'];
+    }
+
+    public function testEncodeRichTextKeepsFakeCdata(): void
+    {
+        $document = new DOMDocument();
+        $document->loadXML($this->getFixture('testEncodeTwoRichText_field1_richtext.xml'));
+
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent([
+            'field_1_richtext' => new RichTextValue($document),
+        ]);
+
+        $payload = $subject->encode($content);
+
+        self::assertStringContainsString('<fakecdata>', $payload);
+        self::assertStringNotContainsString('&lt;section', $payload);
+        self::assertWellFormedXml($payload);
+    }
+
     public function testEncodePageFieldKeepsFakeCdata(): void
     {
         $blocksPayload = '<blocks><item key="1"><name>Code</name><attributes>'
@@ -147,16 +232,12 @@ XML;
         $contentType->method('getFieldDefinition')->willReturn($fieldDefinition);
         $contentTypeServiceMock->method('loadContentType')->willReturn($contentType);
 
-        $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
-        $fieldEncoderManagerMock
-            ->method('encode')
-            ->withAnyParameters()
-            ->willReturn($blocksPayload);
+        $fieldEncoderManager = new FieldEncoderManager([new MarkupFieldEncoderStub($blocksPayload)]);
 
         $subject = new Encoder(
             $contentTypeServiceMock,
             $this->getMockBuilder(EventDispatcherInterface::class)->getMock(),
-            $fieldEncoderManagerMock,
+            $fieldEncoderManager,
             new TextFieldCdataCleaner()
         );
 
@@ -164,7 +245,7 @@ XML;
 
         self::assertStringContainsString('<fakecdata>', $payload);
         self::assertStringNotContainsString('&lt;blocks', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
     }
 
     /**
@@ -191,6 +272,53 @@ XML;
             ]),
             'internalFields' => $fields,
         ]);
+    }
+
+    private function createEncoderWithRealFieldEncoders(): Encoder
+    {
+        $contentTypeServiceMock = $this->getContentTypeServiceMock();
+
+        $contentType = $this->getMockForAbstractClass(
+            ContentType::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ['getFieldDefinition']
+        );
+        $fieldDefinition = $this->getMockBuilder(FieldDefinition::class)
+            ->setConstructorArgs([
+                [
+                    'fieldTypeIdentifier' => 'ezstring',
+                    'isTranslatable' => true,
+                ],
+            ])
+            ->getMockForAbstractClass();
+
+        $contentType
+            ->method('getFieldDefinition')
+            ->willReturn($fieldDefinition);
+
+        $contentTypeServiceMock
+            ->method('loadContentType')
+            ->willReturn($contentType);
+
+        $configResolverMock = $this->getMockBuilder(ConfigResolverInterface::class)->getMock();
+        $configResolverMock
+            ->method('getParameter')
+            ->willReturn([]);
+
+        return new Encoder(
+            $contentTypeServiceMock,
+            $this->getMockBuilder(EventDispatcherInterface::class)->getMock(),
+            new FieldEncoderManager([
+                new TextLineFieldEncoder(),
+                new TextBlockFieldEncoder(),
+                new RichTextFieldEncoder(new RichTextEncoder($configResolverMock)),
+            ]),
+            new TextFieldCdataCleaner()
+        );
     }
 
     /**

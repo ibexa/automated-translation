@@ -14,23 +14,17 @@ use DOMElement;
 use DOMNode;
 use DOMXPath;
 use Ibexa\AutomatedTranslation\Exception\CdataCleanupFailedException;
-use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
-use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use LibXMLError;
 
 final class TextFieldCdataCleaner
 {
-    // field values are identified by class, Page Builder block attributes by their short type name
-    private const CDATA_PRESERVING_TYPES = [
-        RichTextValue::class,
-        LandingPageValue::class,
-        'richtext',
-    ];
-
-    public function clear(string $payload): string
+    /**
+     * @param array<string> $preserveCdataForTypes values of the "type" attribute whose CDATA is markup
+     */
+    public function clear(string $payload, array $preserveCdataForTypes): string
     {
         $dom = $this->loadDocument($payload);
-        $this->processCdataNodes($dom);
+        $this->processCdataNodes($dom, $preserveCdataForTypes);
 
         return $this->saveDocument($dom);
     }
@@ -69,7 +63,10 @@ final class TextFieldCdataCleaner
         return implode(', ', $messages);
     }
 
-    private function processCdataNodes(DOMDocument $dom): void
+    /**
+     * @param array<string> $preserveCdataForTypes
+     */
+    private function processCdataNodes(DOMDocument $dom, array $preserveCdataForTypes): void
     {
         $xpath = new DOMXPath($dom);
         $textNodes = $xpath->query('//text()');
@@ -83,28 +80,23 @@ final class TextFieldCdataCleaner
                 continue;
             }
 
-            if ($this->shouldReplaceCdata($textNode)) {
+            if ($this->shouldReplaceCdata($textNode, $preserveCdataForTypes)) {
                 $this->replaceWithTextNode($dom, $textNode);
             }
         }
     }
 
-    private function shouldReplaceCdata(DOMNode $node): bool
+    /**
+     * @param array<string> $preserveCdataForTypes
+     */
+    private function shouldReplaceCdata(DOMNode $node, array $preserveCdataForTypes): bool
     {
         $parent = $node->parentNode;
         if (!$parent instanceof DOMElement) {
             return false;
         }
 
-        $type = $parent->getAttribute('type');
-        foreach (self::CDATA_PRESERVING_TYPES as $preservedType) {
-            // is_a() because field values may be lazy loading proxies, whose class name is generated
-            if ($type === $preservedType || is_a($type, $preservedType, true)) {
-                return false;
-            }
-        }
-
-        return true;
+        return !in_array($parent->getAttribute('type'), $preserveCdataForTypes, true);
     }
 
     private function replaceWithTextNode(DOMDocument $dom, DOMCdataSection $cdataNode): void
