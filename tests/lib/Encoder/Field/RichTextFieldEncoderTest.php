@@ -11,6 +11,7 @@ namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
+use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\FieldTypeRichText\FieldType\RichText;
 use PHPUnit\Framework\TestCase;
 
@@ -75,17 +76,10 @@ class RichTextFieldEncoderTest extends TestCase
         $decodedXml = '<section xmlns="http://docbook.org/ns/docbook" version="5.0-variant ezpublish-1.0">'
             . '<para>Café &amp; crème — Привет</para></section>';
 
-        $richTextEncoderMock = $this->getMockBuilder(RichTextEncoder::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $configResolver = $this->createMock(ConfigResolverInterface::class);
+        $configResolver->method('getParameter')->willReturn([]);
 
-        $richTextEncoderMock
-            ->expects($this->atLeastOnce())
-            ->method('decode')
-            ->withAnyParameters()
-            ->willReturn($decodedXml);
-
-        $subject = new RichTextFieldEncoder($richTextEncoderMock);
+        $subject = new RichTextFieldEncoder(new RichTextEncoder($configResolver));
         $result = $subject->decode($decodedXml, new RichText\Value($decodedXml));
 
         $storedXml = (string) $result;

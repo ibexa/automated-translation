@@ -39,7 +39,7 @@ parameters:
 		-
 			message: '#^Return type of call to method PHPUnit\\Framework\\MockObject\\MockBuilder\<Ibexa\\AutomatedTranslation\\Encoder\\RichText\\RichTextEncoder\>\:\:getMock\(\) contains unresolvable type\.$#'
 			identifier: method.unresolvableReturnType
-			count: 3
+			count: 2
 			path: tests/lib/Encoder/Field/RichTextFieldEncoderTest.php
 
 		-
