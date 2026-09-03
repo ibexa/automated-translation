@@ -15,7 +15,6 @@ use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
-use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
@@ -27,6 +26,7 @@ use Ibexa\Core\Repository\Values\Content\VersionInfo;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
+use Ibexa\Tests\AutomatedTranslation\Stubs\MarkupFieldEncoderStub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -228,11 +228,7 @@ XML;
         $contentType->method('getFieldDefinition')->willReturn($fieldDefinition);
         $contentTypeServiceMock->method('loadContentType')->willReturn($contentType);
 
-        $fieldEncoder = $this->createMock(FieldEncoderInterface::class);
-        $fieldEncoder->method('canEncode')->willReturn(true);
-        $fieldEncoder->method('encode')->willReturn($blocksPayload);
-
-        $fieldEncoderManager = new FieldEncoderManager([$fieldEncoder]);
+        $fieldEncoderManager = new FieldEncoderManager([new MarkupFieldEncoderStub($blocksPayload)]);
 
         $subject = new Encoder(
             $contentTypeServiceMock,

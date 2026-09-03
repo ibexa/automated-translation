@@ -230,6 +230,12 @@ final class PageBuilderFieldEncoderTest extends TestCase
             ->withAnyParameters()
             ->willReturnArgument(1);
 
+        $this->blockAttributeEncoderManagerMock
+            ->method('producesMarkup')
+            ->willReturnCallback(static function (string $type): bool {
+                return $type === 'richtext';
+            });
+
         $subject = new PageBuilderFieldEncoder(
             $this->blockAttributeEncoderManagerMock,
             $this->blockDefinitionFactoryMock,

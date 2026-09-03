@@ -12,11 +12,12 @@ use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 
-final class RichTextFieldEncoder implements FieldEncoderInterface
+final class RichTextFieldEncoder implements FieldEncoderInterface, MarkupEncoderInterface
 {
     private RichTextEncoder $richTextEncoder;
 

@@ -12,7 +12,6 @@ use Ibexa\AutomatedTranslation\Exception\CdataCleanupFailedException;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
-use Ibexa\Tests\AutomatedTranslation\Stubs\LazyLoadingPageValueStub;
 use PHPUnit\Framework\TestCase;
 
 final class TextFieldCdataCleanerTest extends TestCase
@@ -24,7 +23,10 @@ final class TextFieldCdataCleanerTest extends TestCase
     {
         $subject = new TextFieldCdataCleaner();
 
-        $result = $subject->clear($this->buildPayload($type, '<![CDATA[Tom & Jerry <3]]>'));
+        $result = $subject->clear(
+            $this->buildPayload($type, '<![CDATA[Tom & Jerry <3]]>'),
+            [RichTextValue::class, LandingPageValue::class, 'richtext']
+        );
 
         self::assertStringNotContainsString('CDATA', $result);
         self::assertStringContainsString('Tom &amp; Jerry &lt;3', $result);
@@ -49,7 +51,8 @@ final class TextFieldCdataCleanerTest extends TestCase
         $subject = new TextFieldCdataCleaner();
 
         $result = $subject->clear(
-            $this->buildPayload($type, '<![CDATA[<section><para>lorem ipsum</para></section>]]>')
+            $this->buildPayload($type, '<![CDATA[<section><para>lorem ipsum</para></section>]]>'),
+            [$type]
         );
 
         self::assertStringContainsString('<![CDATA[<section><para>lorem ipsum</para></section>]]>', $result);
@@ -63,14 +66,14 @@ final class TextFieldCdataCleanerTest extends TestCase
         yield 'rich text field' => [RichTextValue::class];
         yield 'page field' => [LandingPageValue::class];
         yield 'page builder richtext attribute' => ['richtext'];
-        yield 'lazy loading proxy of page value' => [LazyLoadingPageValueStub::class];
+        yield 'lazy loading proxy of page value' => ['ProxyManagerGeneratedProxy\\__PM__\\Ibexa\\FieldTypePage\\FieldType\\LandingPage\\Value\\Generated31dda5577b48d8a239cc1b3dfbcb80bc'];
     }
 
     public function testClearRemovesCdataWhenTypeAttributeIsAbsent(): void
     {
         $subject = new TextFieldCdataCleaner();
 
-        $result = $subject->clear('<blocks><item><name><![CDATA[Code & Co]]></name></item></blocks>');
+        $result = $subject->clear('<blocks><item><name><![CDATA[Code & Co]]></name></item></blocks>', ['richtext']);
 
         self::assertStringNotContainsString('CDATA', $result);
         self::assertStringContainsString('Code &amp; Co', $result);
@@ -87,7 +90,7 @@ final class TextFieldCdataCleanerTest extends TestCase
             . '<body type="richtext"><![CDATA[<section><para>lorem</para></section>]]></body>'
             . '</attributes></item></blocks>';
 
-        $result = $subject->clear($payload);
+        $result = $subject->clear($payload, ['richtext']);
 
         self::assertStringContainsString('Code &amp; Co', $result);
         self::assertStringContainsString('Tom &amp; Jerry', $result);
@@ -100,7 +103,7 @@ final class TextFieldCdataCleanerTest extends TestCase
 
         $this->expectException(CdataCleanupFailedException::class);
 
-        $subject->clear('<response><unclosed></response>');
+        $subject->clear('<response><unclosed></response>', []);
     }
 
     private function buildPayload(string $type, string $content): string

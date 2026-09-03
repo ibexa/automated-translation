@@ -94,6 +94,7 @@ class Encoder
     public function encode(Content $content): string
     {
         $results = [];
+        $markupTypes = [];
         $contentType = $this->contentTypeService->loadContentType($content->contentInfo->contentTypeId);
         foreach ($content->getFields() as $field) {
             $identifier = $field->fieldDefIdentifier;
@@ -106,10 +107,14 @@ class Encoder
             if (!$fieldDefinition->isTranslatable) {
                 continue;
             }
-            $type = \get_class($field->value);
+            $type = (string) \get_class($field->value);
 
             if (null === ($value = $this->encodeField($field))) {
                 continue;
+            }
+
+            if ($this->fieldEncoderManager->producesMarkup($field)) {
+                $markupTypes[$type] = $type;
             }
 
             $results[$identifier] = [
@@ -120,7 +125,7 @@ class Encoder
 
         $encoder = new XmlEncoder();
         $payload = $encoder->encode($results, XmlEncoder::FORMAT);
-        $payload = $this->textFieldCdataCleaner->clear($payload);
+        $payload = $this->textFieldCdataCleaner->clear($payload, array_values($markupTypes));
 
         // here Encoder has  decorated with CDATA, we don't want the CDATA
         return str_replace(
