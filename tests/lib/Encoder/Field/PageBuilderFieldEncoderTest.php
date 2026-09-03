@@ -20,12 +20,12 @@ use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockAttribute
 use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinition;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
 use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface;
-use Ibexa\Tests\AutomatedTranslation\WellFormedXmlAssertionTrait;
+use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
 use PHPUnit\Framework\TestCase;
 
 final class PageBuilderFieldEncoderTest extends TestCase
 {
-    use WellFormedXmlAssertionTrait;
+    use WellFormedXmlAssertTrait;
 
     public const ATTRIBUTE_VALUE = 'ibexa';
     public const ATTRIBUTE_VALUE_CDATA = 'ibexa & ibexa';
@@ -176,14 +176,14 @@ final class PageBuilderFieldEncoderTest extends TestCase
         self::assertStringContainsString('<fake_blocks_cdata>', $payload);
         self::assertStringContainsString('<section', $payload);
         self::assertStringNotContainsString('&lt;section', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
     }
 
     public function testEncodeDecodeRichTextAttributeWithSpecialCharacters(): void
     {
         $payload = $this->encodeBlockWith(self::RICHTEXT_ATTRIBUTE_VALUE, 'richtext');
 
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
 
         // escaping is symmetric: the decode assertions below pass with or without the wrapper
         self::assertStringContainsString('<fake_blocks_cdata>', $payload);
@@ -205,7 +205,7 @@ final class PageBuilderFieldEncoderTest extends TestCase
 
         self::assertStringNotContainsString('fake_blocks_cdata', $payload);
         self::assertStringContainsString('Tom &amp; Jerry &lt;3', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
 
         $result = $this->decodeBlockPayload($payload, self::TEXT_ATTRIBUTE_VALUE);
         $page = $result->getPage();

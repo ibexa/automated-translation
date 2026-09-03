@@ -15,6 +15,7 @@ use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
@@ -25,12 +26,13 @@ use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
+use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class EncoderTest extends TestCase
 {
-    use WellFormedXmlAssertionTrait;
+    use WellFormedXmlAssertTrait;
 
     private const LANGUAGE_CODE = 'eng-GB';
 
@@ -150,7 +152,7 @@ XML;
 
         self::assertStringNotContainsString('fakecdata', $payload);
         self::assertStringContainsString('Tom &amp; Jerry &lt;3', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
     }
 
     /**
@@ -162,7 +164,7 @@ XML;
         $content = $this->createContent(['field_1_textline' => new TextLine\Value($value)]);
 
         $payload = $subject->encode($content);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
 
         $result = $subject->decode($payload, $content);
 
@@ -195,7 +197,7 @@ XML;
 
         self::assertStringContainsString('<fakecdata>', $payload);
         self::assertStringNotContainsString('&lt;section', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
     }
 
     public function testEncodePageFieldKeepsFakeCdata(): void
@@ -226,16 +228,16 @@ XML;
         $contentType->method('getFieldDefinition')->willReturn($fieldDefinition);
         $contentTypeServiceMock->method('loadContentType')->willReturn($contentType);
 
-        $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
-        $fieldEncoderManagerMock
-            ->method('encode')
-            ->withAnyParameters()
-            ->willReturn($blocksPayload);
+        $fieldEncoder = $this->createMock(FieldEncoderInterface::class);
+        $fieldEncoder->method('canEncode')->willReturn(true);
+        $fieldEncoder->method('encode')->willReturn($blocksPayload);
+
+        $fieldEncoderManager = new FieldEncoderManager([$fieldEncoder]);
 
         $subject = new Encoder(
             $contentTypeServiceMock,
             $this->getMockBuilder(EventDispatcherInterface::class)->getMock(),
-            $fieldEncoderManagerMock,
+            $fieldEncoderManager,
             new TextFieldCdataCleaner()
         );
 
@@ -243,7 +245,7 @@ XML;
 
         self::assertStringContainsString('<fakecdata>', $payload);
         self::assertStringNotContainsString('&lt;blocks', $payload);
-        $this->assertWellFormedXml($payload);
+        self::assertWellFormedXml($payload);
     }
 
     /**
