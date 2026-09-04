@@ -11,6 +11,7 @@ namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
+use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\FieldTypeRichText\FieldType\RichText;
 use PHPUnit\Framework\TestCase;
 
@@ -68,6 +69,25 @@ class RichTextFieldEncoderTest extends TestCase
 
         $this->assertInstanceOf(RichText\Value::class, $result);
         $this->assertEquals(new RichText\Value($xml1), $result);
+    }
+
+    public function testDecodeRestoresUtf8Encoding(): void
+    {
+        $decodedXml = '<section xmlns="http://docbook.org/ns/docbook" version="5.0-variant ezpublish-1.0">'
+            . '<para>Café &amp; crème — Привет</para></section>';
+
+        $configResolver = $this->createMock(ConfigResolverInterface::class);
+        $configResolver->method('getParameter')->willReturn([]);
+
+        $subject = new RichTextFieldEncoder(new RichTextEncoder($configResolver));
+        $result = $subject->decode($decodedXml, new RichText\Value($decodedXml));
+
+        $storedXml = (string) $result;
+
+        self::assertStringContainsString('encoding="UTF-8"', $storedXml);
+        self::assertStringContainsString('Café', $storedXml);
+        self::assertStringContainsString('Привет', $storedXml);
+        self::assertStringNotContainsString('&#x', $storedXml);
     }
 
     protected function getFixture(string $name): string

@@ -45,7 +45,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *      <response>
  *             <title>The string value</title>
  *             <description>
- *                  <![CDATA[<?xml version="1.0" encoding="UTF-8"?><section><para>lorem ipsum</para></section>]]>
+ *                  <![CDATA[<section><para>lorem ipsum</para></section>]]>
  *              </description>
  *      </response>
  *
@@ -71,8 +71,6 @@ class Encoder
      */
     private const CDATA_FAKER_TAG = 'fakecdata';
 
-    private const XML_MARKUP = '<?xml version="1.0" encoding="UTF-8"?>';
-
     private ContentTypeService $contentTypeService;
 
     private EventDispatcherInterface $eventDispatcher;
@@ -96,6 +94,7 @@ class Encoder
     public function encode(Content $content): string
     {
         $results = [];
+        $markupTypes = [];
         $contentType = $this->contentTypeService->loadContentType($content->contentInfo->contentTypeId);
         foreach ($content->getFields() as $field) {
             $identifier = $field->fieldDefIdentifier;
@@ -108,10 +107,14 @@ class Encoder
             if (!$fieldDefinition->isTranslatable) {
                 continue;
             }
-            $type = \get_class($field->value);
+            $type = (string) \get_class($field->value);
 
             if (null === ($value = $this->encodeField($field))) {
                 continue;
+            }
+
+            if ($this->fieldEncoderManager->producesMarkup($field)) {
+                $markupTypes[$type] = $type;
             }
 
             $results[$identifier] = [
@@ -122,7 +125,7 @@ class Encoder
 
         $encoder = new XmlEncoder();
         $payload = $encoder->encode($results, XmlEncoder::FORMAT);
-        $payload = $this->textFieldCdataCleaner->clear($payload);
+        $payload = $this->textFieldCdataCleaner->clear($payload, array_values($markupTypes));
 
         // here Encoder has  decorated with CDATA, we don't want the CDATA
         return str_replace(
@@ -140,7 +143,7 @@ class Encoder
         $encoder = new XmlEncoder();
         $data = str_replace(
             ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
-            ['<![CDATA[' . self::XML_MARKUP, ']]>'],
+            ['<![CDATA[', ']]>'],
             $xml
         );
 

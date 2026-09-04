@@ -14,7 +14,8 @@ final class RichTextEncoder
 {
     private const CDATA_FAKER_TAG = 'fake_rt_cdata';
 
-    private const XML_MARKUP = '<?xml version="1.0" encoding="UTF-8"?>';
+    // a literal is not enough: DOMDocument omits the encoding when the source had none
+    private const XML_DECLARATION_REGEXP = '/^<\?xml\b[^?]*\?>\s*/';
 
     /**
      * Allow to replace characters preserve eZ RichText Content.
@@ -88,9 +89,7 @@ final class RichTextEncoder
 
     public function encode(string $xmlString): string
     {
-        if (strpos($xmlString, self::XML_MARKUP . "\n") !== false) {
-            $xmlString = substr($xmlString, strlen(self::XML_MARKUP . "\n"));
-        }
+        $xmlString = (string) preg_replace(self::XML_DECLARATION_REGEXP, '', $xmlString);
 
         $xmlString = $this->encodeNonTranslatableCharacters($xmlString);
 

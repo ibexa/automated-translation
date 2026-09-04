@@ -11,8 +11,9 @@ namespace Ibexa\AutomatedTranslation\Encoder\BlockAttribute;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 
-final class RichTextBlockAttributeEncoder implements BlockAttributeEncoderInterface
+final class RichTextBlockAttributeEncoder implements BlockAttributeEncoderInterface, MarkupEncoderInterface
 {
     private const TYPE = 'richtext';
 
