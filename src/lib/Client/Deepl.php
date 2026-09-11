@@ -11,13 +11,11 @@ namespace Ibexa\AutomatedTranslation\Client;
 use GuzzleHttp\Client;
 use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
+use Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
-use Psr\Log\LoggerAwareInterface;
 
-class Deepl implements ClientInterface, LoggerAwareInterface
+class Deepl implements ClientInterface
 {
-    use TranslationTrafficLoggerTrait;
-
     /**
      * List of available codes https://developers.deepl.com/docs/resources/supported-languages.
      */
@@ -32,12 +30,17 @@ class Deepl implements ClientInterface, LoggerAwareInterface
     /** @var array<string, string> */
     private array $languageMap;
 
+    private TranslationTrafficLogger $trafficLogger;
+
+    private bool $debug = false;
+
     /**
      * @param array<string, string> $languageMap
      */
-    public function __construct(array $languageMap)
+    public function __construct(array $languageMap, TranslationTrafficLogger $trafficLogger)
     {
         $this->languageMap = $languageMap;
+        $this->trafficLogger = $trafficLogger;
     }
 
     public function getServiceAlias(): string
@@ -60,12 +63,12 @@ class Deepl implements ClientInterface, LoggerAwareInterface
         }
         $this->authKey = $configuration['authKey'];
 
-        $this->configureDebug($configuration);
+        $this->debug = $this->trafficLogger->isDebugEnabled($configuration);
     }
 
     public function translate(string $payload, ?string $from, string $to): string
     {
-        $this->logTranslationRequest($payload, $from, $to);
+        $this->trafficLogger->logRequest($this, $payload, $from, $to, $this->debug);
 
         $parameters = [
             'target_lang' => $this->normalized($to),
@@ -93,7 +96,7 @@ class Deepl implements ClientInterface, LoggerAwareInterface
         $json = json_decode($response->getBody()->getContents());
         $translatedText = $json->translations[0]->text;
 
-        $this->logTranslationResponse($translatedText, $response->getStatusCode());
+        $this->trafficLogger->logResponse($this, $translatedText, $response->getStatusCode(), $this->debug);
 
         return $translatedText;
     }

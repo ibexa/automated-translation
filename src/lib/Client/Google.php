@@ -11,13 +11,11 @@ namespace Ibexa\AutomatedTranslation\Client;
 use GuzzleHttp\Client;
 use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
+use Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
-use Psr\Log\LoggerAwareInterface;
 
-class Google implements ClientInterface, LoggerAwareInterface
+class Google implements ClientInterface
 {
-    use TranslationTrafficLoggerTrait;
-
     /**
      * Google List of available code https://cloud.google.com/translate/docs/languages.
      */
@@ -31,6 +29,15 @@ class Google implements ClientInterface, LoggerAwareInterface
     ];
 
     private string $apiKey;
+
+    private TranslationTrafficLogger $trafficLogger;
+
+    private bool $debug = false;
+
+    public function __construct(TranslationTrafficLogger $trafficLogger)
+    {
+        $this->trafficLogger = $trafficLogger;
+    }
 
     public function getServiceAlias(): string
     {
@@ -52,12 +59,12 @@ class Google implements ClientInterface, LoggerAwareInterface
         }
         $this->apiKey = $configuration['apiKey'];
 
-        $this->configureDebug($configuration);
+        $this->debug = $this->trafficLogger->isDebugEnabled($configuration);
     }
 
     public function translate(string $payload, ?string $from, string $to): string
     {
-        $this->logTranslationRequest($payload, $from, $to);
+        $this->trafficLogger->logRequest($this, $payload, $from, $to, $this->debug);
 
         $parameters = [
             'key' => $this->apiKey,
@@ -82,7 +89,7 @@ class Google implements ClientInterface, LoggerAwareInterface
         $json = json_decode($response->getBody()->getContents());
         $translatedText = $json->data->translations[0]->translatedText;
 
-        $this->logTranslationResponse($translatedText, $response->getStatusCode());
+        $this->trafficLogger->logResponse($this, $translatedText, $response->getStatusCode(), $this->debug);
 
         return $translatedText;
     }
