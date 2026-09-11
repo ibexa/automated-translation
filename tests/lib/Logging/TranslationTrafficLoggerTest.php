@@ -6,13 +6,14 @@
  */
 declare(strict_types=1);
 
-namespace Ibexa\Tests\AutomatedTranslation\Client;
+namespace Ibexa\Tests\AutomatedTranslation\Logging;
 
-use Ibexa\Tests\AutomatedTranslation\Stubs\TranslationTrafficLoggerStub;
+use Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger;
+use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-final class TranslationTrafficLoggerTraitTest extends TestCase
+final class TranslationTrafficLoggerTest extends TestCase
 {
     private const PAYLOAD = '<response><title>Tom &amp; Jerry</title></response>';
     private const TRANSLATED_PAYLOAD = '<response><title>Tom &amp; Jerry DE</title></response>';
@@ -34,9 +35,9 @@ final class TranslationTrafficLoggerTraitTest extends TestCase
             ->expects(self::never())
             ->method('debug');
 
-        $subject = $this->createSubject($logger, []);
-        $subject->logRequest(self::PAYLOAD, 'en_GB', 'DE');
-        $subject->logResponse(self::TRANSLATED_PAYLOAD, 200);
+        $subject = $this->createSubject($logger);
+        $subject->logRequest($this->createClient(), self::PAYLOAD, 'en_GB', 'DE', false);
+        $subject->logResponse($this->createClient(), self::TRANSLATED_PAYLOAD, 200, false);
     }
 
     public function testLogsPayloadsWhenDebugEnabled(): void
@@ -59,9 +60,9 @@ final class TranslationTrafficLoggerTraitTest extends TestCase
                 )]
             );
 
-        $subject = $this->createSubject($logger, ['debug' => true]);
-        $subject->logRequest(self::PAYLOAD, 'en_GB', 'DE');
-        $subject->logResponse(self::TRANSLATED_PAYLOAD, 200);
+        $subject = $this->createSubject($logger);
+        $subject->logRequest($this->createClient(), self::PAYLOAD, 'en_GB', 'DE', true);
+        $subject->logResponse($this->createClient(), self::TRANSLATED_PAYLOAD, 200, true);
     }
 
     public function testReportsMissingSourceLanguage(): void
@@ -72,7 +73,7 @@ final class TranslationTrafficLoggerTraitTest extends TestCase
             ->method('debug')
             ->with(self::stringContains('Payload sent to stub (auto -> DE'));
 
-        $this->createSubject($logger, ['debug' => true])->logRequest(self::PAYLOAD, null, 'DE');
+        $this->createSubject($logger)->logRequest($this->createClient(), self::PAYLOAD, null, 'DE', true);
     }
 
     /**
@@ -80,14 +81,9 @@ final class TranslationTrafficLoggerTraitTest extends TestCase
      *
      * @param array{debug?: bool|int|string} $configuration
      */
-    public function testDebugFlagParsing(array $configuration, bool $expectsPayload): void
+    public function testDebugFlagParsing(array $configuration, bool $expected): void
     {
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($expectsPayload ? self::once() : self::never())
-            ->method('debug');
-
-        $this->createSubject($logger, $configuration)->logRequest(self::PAYLOAD, 'en_GB', 'DE');
+        self::assertSame($expected, (new TranslationTrafficLogger())->isDebugEnabled($configuration));
     }
 
     /**
@@ -109,24 +105,28 @@ final class TranslationTrafficLoggerTraitTest extends TestCase
 
     public function testDoesNotFailWithoutLogger(): void
     {
-        $subject = new TranslationTrafficLoggerStub();
-        $subject->configure(['debug' => true]);
+        $subject = new TranslationTrafficLogger();
 
-        $subject->logRequest(self::PAYLOAD, 'en_GB', 'DE');
-        $subject->logResponse(self::TRANSLATED_PAYLOAD, 200);
+        $subject->logRequest($this->createClient(), self::PAYLOAD, 'en_GB', 'DE', true);
+        $subject->logResponse($this->createClient(), self::TRANSLATED_PAYLOAD, 200, true);
 
         $this->expectNotToPerformAssertions();
     }
 
-    /**
-     * @param array{debug?: bool|int|string} $configuration
-     */
-    private function createSubject(LoggerInterface $logger, array $configuration): TranslationTrafficLoggerStub
+    private function createSubject(LoggerInterface $logger): TranslationTrafficLogger
     {
-        $subject = new TranslationTrafficLoggerStub();
+        $subject = new TranslationTrafficLogger();
         $subject->setLogger($logger);
-        $subject->configure($configuration);
 
         return $subject;
+    }
+
+    private function createClient(): ClientInterface
+    {
+        $client = $this->createMock(ClientInterface::class);
+        $client->method('getServiceAlias')->willReturn('stub');
+        $client->method('getServiceFullName')->willReturn('Stub Service');
+
+        return $client;
     }
 }
