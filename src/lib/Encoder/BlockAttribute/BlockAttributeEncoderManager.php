@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\BlockAttribute;
 
+use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use InvalidArgumentException;
 
 /**
@@ -24,6 +25,17 @@ class BlockAttributeEncoderManager
     public function __construct(iterable $blockAttributeEncoders = [])
     {
         $this->blockAttributeEncoders = $blockAttributeEncoders;
+    }
+
+    public function producesMarkup(string $type): bool
+    {
+        foreach ($this->blockAttributeEncoders as $blockAttributeEncoder) {
+            if ($blockAttributeEncoder->canEncode($type)) {
+                return $blockAttributeEncoder instanceof MarkupEncoderInterface;
+            }
+        }
+
+        return false;
     }
 
     /**

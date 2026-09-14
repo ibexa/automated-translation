@@ -90,6 +90,33 @@ class RichTextEncoderTest extends TestCase
         $this->assertEquals($xml1, $decodeResult);
     }
 
+    /**
+     * @dataProvider provideXmlDeclarations
+     */
+    public function testEncodeStripsXmlDeclarationVariants(string $declaration): void
+    {
+        $subject = new RichTextEncoder($this->configResolver);
+
+        $encodeResult = $subject->encode($declaration . '<section><para>lorem ipsum</para></section>');
+
+        self::assertStringNotContainsString('<?xml', $encodeResult);
+        self::assertStringStartsWith('<section>', $encodeResult);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public function provideXmlDeclarations(): iterable
+    {
+        yield 'with encoding and newline' => ['<?xml version="1.0" encoding="UTF-8"?>' . "\n"];
+        yield 'with encoding, no newline' => ['<?xml version="1.0" encoding="UTF-8"?>'];
+        yield 'without encoding' => ['<?xml version="1.0"?>' . "\n"];
+        yield 'single quoted' => ["<?xml version='1.0' encoding='UTF-8'?>\n"];
+        yield 'windows line ending' => ['<?xml version="1.0" encoding="UTF-8"?>' . "\r\n"];
+        yield 'standalone' => ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n"];
+        yield 'extra spaces' => ['<?xml  version="1.0"   encoding="UTF-8" ?>' . "\n"];
+    }
+
     protected function getFixture(string $name): string
     {
         return (string) file_get_contents(__DIR__ . '/../../../fixtures/' . $name);
