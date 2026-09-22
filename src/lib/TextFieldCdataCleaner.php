@@ -13,15 +13,18 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
-use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
-use RuntimeException;
+use Ibexa\AutomatedTranslation\Exception\CdataCleanupFailedException;
+use LibXMLError;
 
 final class TextFieldCdataCleaner
 {
-    public function clear(string $payload): string
+    /**
+     * @param array<string> $preserveCdataForTypes values of the "type" attribute whose CDATA is markup
+     */
+    public function clear(string $payload, array $preserveCdataForTypes): string
     {
         $dom = $this->loadDocument($payload);
-        $this->processCdataNodes($dom);
+        $this->processCdataNodes($dom, $preserveCdataForTypes);
 
         return $this->saveDocument($dom);
     }
@@ -29,12 +32,41 @@ final class TextFieldCdataCleaner
     private function loadDocument(string $payload): DOMDocument
     {
         $dom = new DOMDocument();
-        $dom->loadXML($payload);
+
+        $useInternalErrors = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+
+        try {
+            if (!$dom->loadXML($payload)) {
+                throw new CdataCleanupFailedException(sprintf(
+                    'Unable to load XML payload while removing CDATA: %s',
+                    $this->getLibXmlErrorMessage()
+                ));
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($useInternalErrors);
+        }
 
         return $dom;
     }
 
-    private function processCdataNodes(DOMDocument $dom): void
+    private function getLibXmlErrorMessage(): string
+    {
+        $messages = array_map(
+            static function (LibXMLError $error): string {
+                return trim($error->message);
+            },
+            libxml_get_errors()
+        );
+
+        return implode(', ', $messages);
+    }
+
+    /**
+     * @param array<string> $preserveCdataForTypes
+     */
+    private function processCdataNodes(DOMDocument $dom, array $preserveCdataForTypes): void
     {
         $xpath = new DOMXPath($dom);
         $textNodes = $xpath->query('//text()');
@@ -48,20 +80,23 @@ final class TextFieldCdataCleaner
                 continue;
             }
 
-            if ($this->shouldReplaceCdata($textNode)) {
+            if ($this->shouldReplaceCdata($textNode, $preserveCdataForTypes)) {
                 $this->replaceWithTextNode($dom, $textNode);
             }
         }
     }
 
-    private function shouldReplaceCdata(DOMNode $node): bool
+    /**
+     * @param array<string> $preserveCdataForTypes
+     */
+    private function shouldReplaceCdata(DOMNode $node, array $preserveCdataForTypes): bool
     {
         $parent = $node->parentNode;
         if (!$parent instanceof DOMElement) {
             return false;
         }
 
-        return $parent->getAttribute('type') !== RichTextValue::class;
+        return !in_array($parent->getAttribute('type'), $preserveCdataForTypes, true);
     }
 
     private function replaceWithTextNode(DOMDocument $dom, DOMCdataSection $cdataNode): void
@@ -78,7 +113,7 @@ final class TextFieldCdataCleaner
         $result = $dom->saveXML();
 
         if ($result === false) {
-            throw new RuntimeException('Saving XML failed after removing CDATA.');
+            throw new CdataCleanupFailedException('Saving XML failed after removing CDATA.');
         }
 
         return $result;

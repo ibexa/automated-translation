@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
+use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value;
 use InvalidArgumentException;
@@ -23,6 +24,17 @@ final class FieldEncoderManager
     public function __construct(iterable $fieldEncoders = [])
     {
         $this->fieldEncoders = $fieldEncoders;
+    }
+
+    public function producesMarkup(Field $field): bool
+    {
+        foreach ($this->fieldEncoders as $fieldEncoder) {
+            if ($fieldEncoder->canEncode($field)) {
+                return $fieldEncoder instanceof MarkupEncoderInterface;
+            }
+        }
+
+        return false;
     }
 
     public function encode(Field $field): string
