@@ -12,6 +12,7 @@ use Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManag
 use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value as APIValue;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
@@ -19,7 +20,7 @@ use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryIn
 use InvalidArgumentException;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
-final class PageBuilderFieldEncoder implements FieldEncoderInterface
+final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEncoderInterface
 {
     private const CDATA_FAKER_TAG = 'fake_blocks_cdata';
 
@@ -55,6 +56,7 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $value = $field->value;
         $page = $value->getPage();
         $blocks = [];
+        $markupTypes = [];
 
         $blockIterable = $page === null ? [] : $page->getBlockIterator();
 
@@ -74,6 +76,10 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
                     continue;
                 }
 
+                if ($this->blockAttributeEncoderManager->producesMarkup($attributeType)) {
+                    $markupTypes[$attributeType] = $attributeType;
+                }
+
                 $attrs[$attributeName] = [
                     '@type' => $attributeType,
                     '#' => $attributeValue,
@@ -90,7 +96,7 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface
         $payload = $encoder->encode($blocks, XmlEncoder::FORMAT, [
             XmlEncoder::ROOT_NODE_NAME => 'blocks',
         ]);
-        $payload = $this->textFieldCdataCleaner->clear($payload);
+        $payload = $this->textFieldCdataCleaner->clear($payload, array_values($markupTypes));
 
         $payload = str_replace(
             ['<?xml version="1.0"?>' . "\n", '<![CDATA[', ']]>'],
