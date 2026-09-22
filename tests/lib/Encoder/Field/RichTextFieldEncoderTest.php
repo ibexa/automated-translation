@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Ibexa\Tests\AutomatedTranslation\Encoder\Field;
 
+use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
@@ -32,7 +33,7 @@ class RichTextFieldEncoderTest extends TestCase
 
         $field = new Field([
             'fieldDefIdentifier' => 'field_1_richtext',
-            'value' => new RichText\Value($xml1),
+            'value' => $this->createRichTextValue($xml1),
         ]);
 
         $subject = new RichTextFieldEncoder($richTextEncoderMock);
@@ -57,7 +58,7 @@ class RichTextFieldEncoderTest extends TestCase
 
         $field = new Field([
             'fieldDefIdentifier' => 'field_1_richtext',
-            'value' => new RichText\Value($xml1),
+            'value' => $this->createRichTextValue($xml1),
         ]);
 
         $subject = new RichTextFieldEncoder($richTextEncoderMock);
@@ -67,7 +68,15 @@ class RichTextFieldEncoderTest extends TestCase
         );
 
         self::assertInstanceOf(RichText\Value::class, $result);
-        self::assertEquals(new RichText\Value($xml1), $result);
+        self::assertEquals($this->createRichTextValue($xml1), $result);
+    }
+
+    private function createRichTextValue(string $xml): RichText\Value
+    {
+        $document = new DOMDocument();
+        $document->loadXML($xml);
+
+        return new RichText\Value($document);
     }
 
     protected function getFixture(string $name): string
