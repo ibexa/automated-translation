@@ -29,6 +29,10 @@ services:
 
     Ibexa\AutomatedTranslation\Encoder: ~
 
+    Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger:
+        tags:
+            - { name: monolog.logger, channel: ibexa.automated_translation }
+
     Ibexa\AutomatedTranslation\Translator: ~
 
     Ibexa\AutomatedTranslation\TranslatorGuard: ~

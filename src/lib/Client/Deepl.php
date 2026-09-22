@@ -11,6 +11,7 @@ namespace Ibexa\AutomatedTranslation\Client;
 use GuzzleHttp\Client;
 use Ibexa\AutomatedTranslation\Exception\ClientNotConfiguredException;
 use Ibexa\AutomatedTranslation\Exception\InvalidLanguageCodeException;
+use Ibexa\AutomatedTranslation\Logging\TranslationTrafficLogger;
 use Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface;
 
 class Deepl implements ClientInterface
@@ -29,12 +30,17 @@ class Deepl implements ClientInterface
     /** @var array<string, string> */
     private array $languageMap;
 
+    private TranslationTrafficLogger $trafficLogger;
+
+    private bool $debug = false;
+
     /**
      * @param array<string, string> $languageMap
      */
-    public function __construct(array $languageMap)
+    public function __construct(array $languageMap, TranslationTrafficLogger $trafficLogger)
     {
         $this->languageMap = $languageMap;
+        $this->trafficLogger = $trafficLogger;
     }
 
     public function getServiceAlias(): string
@@ -48,7 +54,7 @@ class Deepl implements ClientInterface
     }
 
     /**
-     * @param array{authKey?: string} $configuration
+     * @param array{authKey?: string, debug?: bool|int|string} $configuration
      */
     public function setConfiguration(array $configuration): void
     {
@@ -56,10 +62,14 @@ class Deepl implements ClientInterface
             throw new ClientNotConfiguredException('authKey is required');
         }
         $this->authKey = $configuration['authKey'];
+
+        $this->debug = $this->trafficLogger->isDebugEnabled($configuration);
     }
 
     public function translate(string $payload, ?string $from, string $to): string
     {
+        $this->trafficLogger->logRequest($this, $payload, $from, $to, $this->debug);
+
         $parameters = [
             'target_lang' => $this->normalized($to),
             'tag_handling' => 'xml',
@@ -84,8 +94,11 @@ class Deepl implements ClientInterface
         $response = $http->post('/v2/translate', ['form_params' => $parameters]);
         // May use the native json method from guzzle
         $json = json_decode($response->getBody()->getContents());
+        $translatedText = $json->translations[0]->text;
 
-        return $json->translations[0]->text;
+        $this->trafficLogger->logResponse($this, $translatedText, $response->getStatusCode(), $this->debug);
+
+        return $translatedText;
     }
 
     public function supportsLanguage(string $languageCode): bool
