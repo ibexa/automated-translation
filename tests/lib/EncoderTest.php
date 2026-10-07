@@ -16,18 +16,21 @@ use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder;
 use Ibexa\AutomatedTranslation\TextFieldCdataCleaner;
+use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\ContentInfo;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Core\FieldType\TextLine;
+use Ibexa\Core\FieldType\Value;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
 use Ibexa\FieldTypeRichText\FieldType\RichText\Value as RichTextValue;
 use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
 use Ibexa\Tests\AutomatedTranslation\Stubs\MarkupFieldEncoderStub;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -249,7 +252,7 @@ XML;
     }
 
     /**
-     * @param array<string, \Ibexa\Core\FieldType\Value> $fieldValues
+     * @param array<string, Value> $fieldValues
      */
     private function createContent(array $fieldValues): Content
     {
@@ -324,8 +327,10 @@ XML;
     /**
      * @param mixed $contentTypeConsecutive
      */
-    private function prepareEncoderForTextLines(string $fieldEncoderReturned, ...$contentTypeConsecutive): Encoder
-    {
+    private function prepareEncoderForTextLines(
+        string $fieldEncoderReturned,
+        ...$contentTypeConsecutive
+    ): Encoder {
         $contentTypeServiceMock = $this->getContentTypeServiceMock();
         $eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
         $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
@@ -378,7 +383,7 @@ XML;
     /**
      * Returns ContentTypeService mock object.
      *
-     * @return \Ibexa\Contracts\Core\Repository\ContentTypeService|\PHPUnit\Framework\MockObject\MockObject
+     * @return ContentTypeService|MockObject
      */
     protected function getContentTypeServiceMock()
     {

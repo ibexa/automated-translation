@@ -106,8 +106,10 @@ final class TextFieldCdataCleanerTest extends TestCase
         $subject->clear('<response><unclosed></response>', []);
     }
 
-    private function buildPayload(string $type, string $content): string
-    {
+    private function buildPayload(
+        string $type,
+        string $content
+    ): string {
         return sprintf('<response><field type="%s">%s</field></response>', htmlspecialchars($type), $content);
     }
 }

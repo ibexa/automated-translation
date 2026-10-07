@@ -22,8 +22,10 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container): void
-    {
+    public function load(
+        array $configs,
+        ContainerBuilder $container
+    ): void {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
         if (empty($config['system'])) {
@@ -58,8 +60,10 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
     /**
      * @param array{system: array{configurations: mixed}} $config
      */
-    private function hasConfiguredClients(array $config, ContainerBuilder $container): bool
-    {
+    private function hasConfiguredClients(
+        array $config,
+        ContainerBuilder $container
+    ): bool {
         return 0 !== count(array_filter($config['system'], static function ($value) use ($container) {
             return array_filter($value['configurations'], static function ($value) use ($container) {
                 $value = is_array($value) ? reset($value) : $value;

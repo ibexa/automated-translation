@@ -12,6 +12,4 @@ namespace Ibexa\Contracts\AutomatedTranslation\Encoder;
  * Marks an encoder whose encoded value is itself XML, so that its CDATA has to survive encoding
  * instead of being escaped as plain text.
  */
-interface MarkupEncoderInterface
-{
-}
+interface MarkupEncoderInterface {}
