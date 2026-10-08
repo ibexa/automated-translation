@@ -52,7 +52,7 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
 
     public function encode(Field $field): string
     {
-        /** @var \Ibexa\FieldTypePage\FieldType\LandingPage\Value $value */
+        /** @var Value $value */
         $value = $field->value;
         $page = $value->getPage();
         $blocks = [];
@@ -107,8 +107,10 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
         return (string) $payload;
     }
 
-    public function decode(string $value, $previousFieldValue): APIValue
-    {
+    public function decode(
+        string $value,
+        $previousFieldValue
+    ): APIValue {
         $encoder = new XmlEncoder();
         $data = str_replace(
             ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
@@ -116,7 +118,7 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
             $value
         );
 
-        /** @var \Ibexa\FieldTypePage\FieldType\LandingPage\Value $previousFieldValue */
+        /** @var Value $previousFieldValue */
         $page = $previousFieldValue->getPage();
         if ($page === null) {
             return new Value();
@@ -150,8 +152,10 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
     /**
      * @param mixed $value
      */
-    private function encodeBlockAttribute(string $type, $value): ?string
-    {
+    private function encodeBlockAttribute(
+        string $type,
+        $value
+    ): ?string {
         try {
             $value = $this->blockAttributeEncoderManager->encode($type, $value);
         } catch (InvalidArgumentException $e) {
@@ -161,8 +165,10 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
         return $value;
     }
 
-    private function decodeBlockAttribute(string $type, string $value): ?string
-    {
+    private function decodeBlockAttribute(
+        string $type,
+        string $value
+    ): ?string {
         try {
             $value = $this->blockAttributeEncoderManager->decode($type, $value);
         } catch (InvalidArgumentException | EmptyTranslatedAttributeException $e) {

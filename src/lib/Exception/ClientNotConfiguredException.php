@@ -10,8 +10,6 @@ namespace Ibexa\AutomatedTranslation\Exception;
 
 use RuntimeException;
 
-class ClientNotConfiguredException extends RuntimeException
-{
-}
+class ClientNotConfiguredException extends RuntimeException {}
 
 class_alias(ClientNotConfiguredException::class, 'EzSystems\EzPlatformAutomatedTranslation\Exception\ClientNotConfiguredException');

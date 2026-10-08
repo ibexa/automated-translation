@@ -29,14 +29,18 @@ class TranslatorGuard
 
     private LanguageService $languageService;
 
-    public function __construct(ContentService $contentService, LanguageService $languageService)
-    {
+    public function __construct(
+        ContentService $contentService,
+        LanguageService $languageService
+    ) {
         $this->contentService = $contentService;
         $this->languageService = $languageService;
     }
 
-    public function isLanguageVersionExist(Content $content, string $languageCode): bool
-    {
+    public function isLanguageVersionExist(
+        Content $content,
+        string $languageCode
+    ): bool {
         return \in_array($languageCode, $content->versionInfo->languageCodes);
     }
 
@@ -52,8 +56,10 @@ class TranslatorGuard
         return false;
     }
 
-    public function enforceSourceLanguageVersionExist(Content $content, string $languageCode): void
-    {
+    public function enforceSourceLanguageVersionExist(
+        Content $content,
+        string $languageCode
+    ): void {
         if (!$this->isLanguageVersionExist($content, $languageCode)) {
             throw new \RuntimeException("Content {$content->id} does not have a Translation {$languageCode}.");
         }
@@ -68,8 +74,10 @@ class TranslatorGuard
         }
     }
 
-    public function fetchContent(Content $content, ?string $languageCode): Content
-    {
+    public function fetchContent(
+        Content $content,
+        ?string $languageCode
+    ): Content {
         if (null === $languageCode) {
             return $this->contentService->loadContentByContentInfo($content->contentInfo);
         }

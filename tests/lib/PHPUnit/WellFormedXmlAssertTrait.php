@@ -12,8 +12,10 @@ use Ibexa\Tests\AutomatedTranslation\PHPUnit\Constraint\IsWellFormedXml;
 
 trait WellFormedXmlAssertTrait
 {
-    public static function assertWellFormedXml(string $payload, string $message = ''): void
-    {
+    public static function assertWellFormedXml(
+        string $payload,
+        string $message = ''
+    ): void {
         self::assertThat($payload, new IsWellFormedXml(), $message);
     }
 }

@@ -58,8 +58,11 @@ class Deepl implements ClientInterface
         $this->authKey = $configuration['authKey'];
     }
 
-    public function translate(string $payload, ?string $from, string $to): string
-    {
+    public function translate(
+        string $payload,
+        ?string $from,
+        string $to
+    ): string {
         $parameters = [
             'target_lang' => $this->normalized($to),
             'tag_handling' => 'xml',

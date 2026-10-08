@@ -22,7 +22,10 @@ interface FieldEncoderInterface
     /**
      * @param mixed $previousFieldValue
      */
-    public function decode(string $value, $previousFieldValue): Value;
+    public function decode(
+        string $value,
+        $previousFieldValue
+    ): Value;
 }
 
 class_alias(FieldEncoderInterface::class, 'EzSystems\EzPlatformAutomatedTranslation\Encoder\Field\FieldEncoderInterface');

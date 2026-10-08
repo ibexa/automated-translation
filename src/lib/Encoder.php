@@ -136,10 +136,12 @@ class Encoder
     }
 
     /**
-     * @return array<int|string, \Ibexa\Core\FieldType\Value>
+     * @return array<int|string, Value>
      */
-    public function decode(string $xml, Content $sourceContent): array
-    {
+    public function decode(
+        string $xml,
+        Content $sourceContent
+    ): array {
         $encoder = new XmlEncoder();
         $data = str_replace(
             ['<' . self::CDATA_FAKER_TAG . '>', '</' . self::CDATA_FAKER_TAG . '>'],
@@ -203,8 +205,11 @@ class Encoder
     /**
      * @param mixed $previousFieldValue
      */
-    private function decodeField(string $type, string $value, $previousFieldValue): ?Value
-    {
+    private function decodeField(
+        string $type,
+        string $value,
+        $previousFieldValue
+    ): ?Value {
         try {
             $fieldValue = $this->fieldEncoderManager->decode($type, $value, $previousFieldValue);
         } catch (InvalidArgumentException | EmptyTranslatedFieldException $e) {
