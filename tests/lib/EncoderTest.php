@@ -357,7 +357,7 @@ XML;
         $contentType
             ->expects(self::exactly($expected))
             ->method('getFieldDefinition')
-            ->withConsecutive(...$contentTypeConsecutive)
+            ->withConsecutive(...array_values($contentTypeConsecutive))
             ->willReturnOnConsecutiveCalls($fieldDefinition, $fieldDefinition);
 
         $contentTypeServiceMock
