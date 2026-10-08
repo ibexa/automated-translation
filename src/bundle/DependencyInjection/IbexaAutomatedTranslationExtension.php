@@ -65,7 +65,7 @@ class IbexaAutomatedTranslationExtension extends Extension implements PrependExt
         ContainerBuilder $container
     ): bool {
         return 0 !== count(array_filter($config['system'], static function ($value) use ($container) {
-            return array_filter($value['configurations'], static function ($value) use ($container) {
+            return [] !== array_filter($value['configurations'], static function ($value) use ($container) {
                 $value = is_array($value) ? reset($value) : $value;
 
                 return !empty($container->resolveEnvPlaceholders($value, true));
