@@ -327,8 +327,10 @@ XML;
     /**
      * @param array<int, string> ...$contentTypeConsecutive
      */
-    private function prepareEncoderForTextLines(string $fieldEncoderReturned, array ...$contentTypeConsecutive): Encoder
-    {
+    private function prepareEncoderForTextLines(
+        string $fieldEncoderReturned,
+        array ...$contentTypeConsecutive
+    ): Encoder {
         $contentTypeServiceMock = $this->getContentTypeServiceMock();
         $eventDispatcherMock = $this->getMockBuilder(EventDispatcherInterface::class)->getMock();
         $fieldEncoderManagerMock = $this->getMockBuilder(FieldEncoderManager::class)->getMock();
@@ -381,7 +383,7 @@ XML;
     /**
      * Returns ContentTypeService mock object.
      */
-    protected function getContentTypeServiceMock(): ContentTypeService&MockObject
+    protected function getContentTypeServiceMock(): ContentTypeService & MockObject
     {
         return $this
             ->getMockBuilder(ContentTypeService::class)

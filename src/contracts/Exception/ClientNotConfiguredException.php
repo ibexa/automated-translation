@@ -10,6 +10,4 @@ namespace Ibexa\Contracts\AutomatedTranslation\Exception;
 
 use RuntimeException;
 
-final class ClientNotConfiguredException extends RuntimeException
-{
-}
+final class ClientNotConfiguredException extends RuntimeException {}

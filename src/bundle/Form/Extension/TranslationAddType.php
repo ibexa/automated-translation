@@ -111,7 +111,10 @@ class TranslationAddType extends AbstractTypeExtension
         // let's pass to the template/form the possible language
         $map = [];
 
-        $fillMap = function ($key, array &$map) use ($form): void {
+        $fillMap = function (
+            $key,
+            array &$map
+        ) use ($form): void {
             $languages = $form->get($key);
             $choices = $languages->getConfig()->getAttribute('choice_list')->getChoices();
             /** @var Language $language */

@@ -60,8 +60,10 @@ final class IbexaAutomatedTranslationExtension extends Extension implements Prep
     /**
      * @param array{system: array{configurations: mixed}} $config
      */
-    private function hasConfiguredClients(array $config, ContainerBuilder $container): bool
-    {
+    private function hasConfiguredClients(
+        array $config,
+        ContainerBuilder $container
+    ): bool {
         return 0 !== count(array_filter($config['system'], static function (array $value) use ($container): bool {
             return [] !== array_filter($value['configurations'], static function ($value) use ($container): bool {
                 $value = is_array($value) ? reset($value) : $value;

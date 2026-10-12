@@ -87,8 +87,8 @@ final class PageBuilderFieldEncoder implements FieldEncoderInterface, MarkupEnco
             }
 
             $blocks[$block->getId()] = [
-              'name' => $block->getName(),
-              'attributes' => $attrs,
+                'name' => $block->getName(),
+                'attributes' => $attrs,
             ];
         }
 

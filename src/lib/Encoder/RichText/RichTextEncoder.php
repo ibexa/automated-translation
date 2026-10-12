@@ -76,13 +76,13 @@ final class RichTextEncoder
         $this->nonTranslatableTags = ['ezvalue', 'ezconfig', 'ezembed'] + $tags;
         $this->nonTranslatableSelfClosingTags = ['ezembedinline'] + $selfClosedTags;
         $this->nonTranslatableCharactersHashMap = [
-                "\n" => '<XEOL />',
-                '<section xmlns="http://docbook.org/ns/docbook"'
-                . ' xmlns:xlink="http://www.w3.org/1999/xlink"'
-                . ' xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"'
-                . ' xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"'
-                . ' version="5.0-variant ezpublish-1.0">' => '<section ATTR1="1">',
-            ] + $chars;
+            "\n" => '<XEOL />',
+            '<section xmlns="http://docbook.org/ns/docbook"'
+            . ' xmlns:xlink="http://www.w3.org/1999/xlink"'
+            . ' xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"'
+            . ' xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"'
+            . ' version="5.0-variant ezpublish-1.0">' => '<section ATTR1="1">',
+        ] + $chars;
         $this->nonValidAttributeTags = ['title'] + $attributes;
         $this->placeHolderMap = [];
     }

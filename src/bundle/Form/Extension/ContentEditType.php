@@ -49,7 +49,7 @@ class ContentEditType extends AbstractTypeExtension
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event): void {
-                /** @var \Ibexa\AdminUi\Form\Data\ContentTranslationData $data */
+                /** @var ContentTranslationData $data */
                 $data = $event->getData();
                 if (!$data instanceof ContentTranslationData) {
                     return;

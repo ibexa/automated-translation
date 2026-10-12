@@ -10,6 +10,4 @@ namespace Ibexa\AutomatedTranslation\Exception;
 
 use InvalidArgumentException;
 
-class EmptyTranslatedAttributeException extends InvalidArgumentException
-{
-}
+class EmptyTranslatedAttributeException extends InvalidArgumentException {}
