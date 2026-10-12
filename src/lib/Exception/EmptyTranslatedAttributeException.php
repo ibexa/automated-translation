@@ -10,8 +10,6 @@ namespace Ibexa\AutomatedTranslation\Exception;
 
 use InvalidArgumentException;
 
-class EmptyTranslatedAttributeException extends InvalidArgumentException
-{
-}
+class EmptyTranslatedAttributeException extends InvalidArgumentException {}
 
 class_alias(EmptyTranslatedAttributeException::class, 'EzSystems\EzPlatformAutomatedTranslation\Exception\EmptyTranslatedAttributeException');

@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\Field;
 
+use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Core\FieldType\Value;
@@ -15,11 +17,11 @@ use InvalidArgumentException;
 
 final class FieldEncoderManager
 {
-    /** @var iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface[] */
+    /** @var iterable|FieldEncoderInterface[] */
     private $fieldEncoders;
 
     /**
-     * @param iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\Field\FieldEncoderInterface[] $fieldEncoders
+     * @param iterable|FieldEncoderInterface[] $fieldEncoders
      */
     public function __construct(iterable $fieldEncoders = [])
     {
@@ -56,11 +58,14 @@ final class FieldEncoderManager
     /**
      * @param mixed $previousFieldValue
      *
-     * @throws \InvalidArgumentException
-     * @throws \Ibexa\AutomatedTranslation\Exception\EmptyTranslatedFieldException
+     * @throws InvalidArgumentException
+     * @throws EmptyTranslatedFieldException
      */
-    public function decode(string $type, string $value, $previousFieldValue): Value
-    {
+    public function decode(
+        string $type,
+        string $value,
+        $previousFieldValue
+    ): Value {
         foreach ($this->fieldEncoders as $fieldEncoder) {
             if ($fieldEncoder->canDecode($type)) {
                 return $fieldEncoder->decode($value, $previousFieldValue);

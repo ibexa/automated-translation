@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class TranslationController extends Controller
 {
-    /** @var \Ibexa\Bundle\AdminUi\Controller\TranslationController */
+    /** @var BaseTranslationController */
     private $translationController;
 
     public function __construct(BaseTranslationController $translationController)
@@ -87,8 +87,10 @@ final class TranslationController extends Controller
         return $this->translationController->removeAction($request);
     }
 
-    private function targetUrlContainsPattern(string $targetUrl, string $pattern): bool
-    {
+    private function targetUrlContainsPattern(
+        string $targetUrl,
+        string $pattern
+    ): bool {
         return 1 === preg_match("#{$pattern}#", $targetUrl);
     }
 }

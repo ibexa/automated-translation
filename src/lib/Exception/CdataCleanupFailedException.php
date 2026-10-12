@@ -10,6 +10,4 @@ namespace Ibexa\AutomatedTranslation\Exception;
 
 use RuntimeException;
 
-class CdataCleanupFailedException extends RuntimeException
-{
-}
+class CdataCleanupFailedException extends RuntimeException {}

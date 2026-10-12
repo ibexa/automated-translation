@@ -15,7 +15,7 @@ final class FieldDecodeEvent
     /** @var string */
     private $type;
 
-    /** @var \Ibexa\Core\FieldType\Value */
+    /** @var Value */
     private $value;
 
     /** @var mixed */

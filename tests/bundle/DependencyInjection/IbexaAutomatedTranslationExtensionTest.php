@@ -67,8 +67,10 @@ final class IbexaAutomatedTranslationExtensionTest extends TestCase
      *
      * @dataProvider clientConfigurationDataProvider
      */
-    public function testHasConfiguredClients(array $input, bool $expected): void
-    {
+    public function testHasConfiguredClients(
+        array $input,
+        bool $expected
+    ): void {
         $containerMock = $this->getMockBuilder(ContainerBuilder::class)
             ->onlyMethods(['resolveEnvPlaceholders'])
             ->getMock();

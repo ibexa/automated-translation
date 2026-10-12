@@ -13,16 +13,18 @@ use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 
 class ClientProvider
 {
-    /** @var \Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface[] */
+    /** @var ClientInterface[] */
     private array $clients = [];
 
     private ConfigResolverInterface $configResolver;
 
     /**
-     * @param iterable|\Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface[] $clients
+     * @param iterable|ClientInterface[] $clients
      */
-    public function __construct(iterable $clients, ConfigResolverInterface $configResolver)
-    {
+    public function __construct(
+        iterable $clients,
+        ConfigResolverInterface $configResolver
+    ) {
         $this->configResolver = $configResolver;
         foreach ($clients as $client) {
             $this->addClient($client);
@@ -30,7 +32,7 @@ class ClientProvider
     }
 
     /**
-     * @param \Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface $client
+     * @param ClientInterface $client
      *
      * @throws \ReflectionException
      *
@@ -59,7 +61,7 @@ class ClientProvider
     }
 
     /**
-     * @return \Ibexa\Contracts\AutomatedTranslation\Client\ClientInterface[]
+     * @return ClientInterface[]
      */
     public function getClients(): array
     {

@@ -11,6 +11,7 @@ namespace Ibexa\Bundle\AutomatedTranslation\Form\Extension;
 use Ibexa\AdminUi\Form\Type\Content\Translation\TranslationAddType as BaseTranslationAddType;
 use Ibexa\AutomatedTranslation\ClientProvider;
 use Ibexa\Bundle\AutomatedTranslation\Form\TranslationAddDataTransformer;
+use Ibexa\Contracts\Core\Repository\Values\Content\Language;
 use Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -44,8 +45,10 @@ class TranslationAddType extends AbstractTypeExtension
         return [BaseTranslationAddType::class];
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    public function buildForm(
+        FormBuilderInterface $builder,
+        array $options
+    ): void {
         $clients = $this->clientProvider->getClients();
         $clientsCount = count($clients);
 
@@ -100,15 +103,21 @@ class TranslationAddType extends AbstractTypeExtension
         $builder->addModelTransformer(new TranslationAddDataTransformer());
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options): void
-    {
+    public function buildView(
+        FormView $view,
+        FormInterface $form,
+        array $options
+    ): void {
         // let's pass to the template/form the possible language
         $map = [];
 
-        $fillMap = function ($key, &$map) use ($form) {
+        $fillMap = function (
+            $key,
+            &$map
+        ) use ($form) {
             $languages = $form->get($key);
             $choices = $languages->getConfig()->getAttribute('choice_list')->getChoices();
-            /** @var \Ibexa\Contracts\Core\Repository\Values\Content\Language $language */
+            /** @var Language $language */
             foreach ($choices as $language) {
                 foreach ($this->clientProvider->getClients() as $client) {
                     $posix = $this->localeConverter->convertToPOSIX($language->languageCode);

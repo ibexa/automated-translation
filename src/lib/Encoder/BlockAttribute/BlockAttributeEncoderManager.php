@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Ibexa\AutomatedTranslation\Encoder\BlockAttribute;
 
+use Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException;
+use Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface;
 use Ibexa\Contracts\AutomatedTranslation\Encoder\MarkupEncoderInterface;
 use InvalidArgumentException;
 
@@ -16,11 +18,11 @@ use InvalidArgumentException;
  */
 class BlockAttributeEncoderManager
 {
-    /** @var iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface[] */
+    /** @var iterable|BlockAttributeEncoderInterface[] */
     private $blockAttributeEncoders;
 
     /**
-     * @param iterable|\Ibexa\Contracts\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderInterface[] $blockAttributeEncoders
+     * @param iterable|BlockAttributeEncoderInterface[] $blockAttributeEncoders
      */
     public function __construct(iterable $blockAttributeEncoders = [])
     {
@@ -41,8 +43,10 @@ class BlockAttributeEncoderManager
     /**
      * @param mixed $value
      */
-    public function encode(string $type, $value): string
-    {
+    public function encode(
+        string $type,
+        $value
+    ): string {
         foreach ($this->blockAttributeEncoders as $blockAttributeEncoder) {
             if ($blockAttributeEncoder->canEncode($type)) {
                 return $blockAttributeEncoder->encode($value);
@@ -58,10 +62,12 @@ class BlockAttributeEncoderManager
     }
 
     /**
-     * @throws \Ibexa\AutomatedTranslation\Exception\EmptyTranslatedAttributeException
+     * @throws EmptyTranslatedAttributeException
      */
-    public function decode(string $type, string $value): string
-    {
+    public function decode(
+        string $type,
+        string $value
+    ): string {
         foreach ($this->blockAttributeEncoders as $blockAttributeEncoder) {
             if ($blockAttributeEncoder->canDecode($type)) {
                 return $blockAttributeEncoder->decode($value);

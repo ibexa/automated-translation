@@ -17,9 +17,9 @@ class TranslationAddDataTransformer implements DataTransformerInterface
     public const NO_SERVICE = 'no_service';
 
     /**
-     * @param \Ibexa\AdminUi\Form\Data\Content\Translation\TranslationAddData $value
+     * @param BaseTranslationAddData $value
      *
-     * @return \Ibexa\Bundle\AutomatedTranslation\Form\Data\TranslationAddData
+     * @return TranslationAddData
      */
     public function transform($value): BaseTranslationAddData
     {
@@ -28,7 +28,7 @@ class TranslationAddDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param \Ibexa\Bundle\AutomatedTranslation\Form\Data\TranslationAddData $value
+     * @param TranslationAddData $value
      */
     public function reverseTransform($value): TranslationAddData
     {

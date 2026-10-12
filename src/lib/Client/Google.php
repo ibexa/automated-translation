@@ -54,8 +54,11 @@ class Google implements ClientInterface, LoggerAwareInterface
         $this->apiKey = $configuration['apiKey'];
     }
 
-    public function translate(string $payload, ?string $from, string $to): string
-    {
+    public function translate(
+        string $payload,
+        ?string $from,
+        string $to
+    ): string {
         if ($this->logger) {
             $this->logger->log('info', sprintf(
                 'Calling %s for translated content (length %s)',

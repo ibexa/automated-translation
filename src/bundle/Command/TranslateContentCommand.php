@@ -66,8 +66,10 @@ final class TranslateContentCommand extends Command
             ->addOption('to', '--to', InputOption::VALUE_REQUIRED, 'Target Language');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
         $contentId = (int) $input->getArgument('contentId');
         $content = $this->contentService->loadContent($contentId);
         $draft = $this->translator->getTranslatedContent(
@@ -82,8 +84,10 @@ final class TranslateContentCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
+    protected function initialize(
+        InputInterface $input,
+        OutputInterface $output
+    ): void {
         parent::initialize($input, $output);
         $this->permissionResolver->setCurrentUserReference(
             $this->userService->loadUser(self::ADMINISTRATOR_USER_ID)
