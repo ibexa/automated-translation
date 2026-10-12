@@ -22,5 +22,8 @@ interface FieldEncoderInterface
     /**
      * @param mixed $previousFieldValue
      */
-    public function decode(string $value, $previousFieldValue): Value;
+    public function decode(
+        string $value,
+        $previousFieldValue
+    ): Value;
 }

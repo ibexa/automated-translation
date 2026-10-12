@@ -5,7 +5,8 @@
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 declare(strict_types=1);
+use DG\BypassFinals;
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
-DG\BypassFinals::enable();
+BypassFinals::enable();

@@ -21,6 +21,7 @@ use Ibexa\Contracts\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitio
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value;
 use Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface;
 use Ibexa\Tests\AutomatedTranslation\PHPUnit\WellFormedXmlAssertTrait;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class PageBuilderFieldEncoderTest extends TestCase
@@ -34,10 +35,10 @@ final class PageBuilderFieldEncoderTest extends TestCase
     private const TEXT_ATTRIBUTE_VALUE = 'Tom & Jerry <3 Café';
     private const RICHTEXT_ATTRIBUTE_VALUE = '<section ATTR1="1"><para>Tom &amp; Jerry &lt;3 Café</para></section>';
 
-    /** @var \Ibexa\AutomatedTranslation\Encoder\BlockAttribute\BlockAttributeEncoderManager&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var BlockAttributeEncoderManager&MockObject */
     private BlockAttributeEncoderManager $blockAttributeEncoderManagerMock;
 
-    /** @var \Ibexa\FieldTypePage\FieldType\Page\Block\Definition\BlockDefinitionFactoryInterface&\PHPUnit\Framework\MockObject\MockObject */
+    /** @var BlockDefinitionFactoryInterface&MockObject */
     private BlockDefinitionFactoryInterface $blockDefinitionFactoryMock;
 
     public function setUp(): void
@@ -218,8 +219,10 @@ final class PageBuilderFieldEncoderTest extends TestCase
         self::assertSame(self::TEXT_ATTRIBUTE_VALUE, $attribute->getValue());
     }
 
-    private function encodeBlockWith(string $attributeValue, string $attributeType): string
-    {
+    private function encodeBlockWith(
+        string $attributeValue,
+        string $attributeType
+    ): string {
         $this->blockDefinitionFactoryMock
             ->method('getBlockDefinition')
             ->withAnyParameters()
@@ -245,8 +248,10 @@ final class PageBuilderFieldEncoderTest extends TestCase
         return $subject->encode($this->getLandingPageField(self::BLOCK_NAME_WITH_AMP, $attributeValue));
     }
 
-    private function decodeBlockPayload(string $payload, string $attributeValue): Value
-    {
+    private function decodeBlockPayload(
+        string $payload,
+        string $attributeValue
+    ): Value {
         $this->blockAttributeEncoderManagerMock
             ->method('decode')
             ->withAnyParameters()
@@ -278,13 +283,17 @@ final class PageBuilderFieldEncoderTest extends TestCase
         ]);
     }
 
-    private function getPage(string $blockName = 'Code', string $attributeValue = self::ATTRIBUTE_VALUE): Page
-    {
+    private function getPage(
+        string $blockName = 'Code',
+        string $attributeValue = self::ATTRIBUTE_VALUE
+    ): Page {
         return new Page('default', [$this->createZone($blockName, $attributeValue)]);
     }
 
-    private function createZone(string $blockName = 'Code', string $attributeValue = self::ATTRIBUTE_VALUE): Zone
-    {
+    private function createZone(
+        string $blockName = 'Code',
+        string $attributeValue = self::ATTRIBUTE_VALUE
+    ): Zone {
         return new Zone('1', 'Foo', [
             new BlockValue(
                 '1',

@@ -41,8 +41,10 @@ final class MarkupFieldEncoderStub implements FieldEncoderInterface, MarkupEncod
     /**
      * @param mixed $previousFieldValue
      */
-    public function decode(string $value, $previousFieldValue): Value
-    {
+    public function decode(
+        string $value,
+        $previousFieldValue
+    ): Value {
         throw new LogicException('This stub only covers the encoding side.');
     }
 }

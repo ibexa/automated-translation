@@ -23,6 +23,7 @@ use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Core\FieldType\TextLine;
+use Ibexa\Core\FieldType\Value;
 use Ibexa\Core\Repository\Values\Content\Content;
 use Ibexa\Core\Repository\Values\Content\VersionInfo;
 use Ibexa\FieldTypePage\FieldType\LandingPage\Value as LandingPageValue;
@@ -251,7 +252,7 @@ XML;
     }
 
     /**
-     * @param array<string, \Ibexa\Core\FieldType\Value> $fieldValues
+     * @param array<string, Value> $fieldValues
      */
     private function createContent(array $fieldValues): Content
     {

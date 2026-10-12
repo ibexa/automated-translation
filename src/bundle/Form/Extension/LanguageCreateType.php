@@ -32,8 +32,10 @@ class LanguageCreateType extends AbstractTypeExtension
         return [BaseLanguageCreateType::class];
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    public function buildForm(
+        FormBuilderInterface $builder,
+        array $options
+    ): void {
         $builder->remove('languageCode');
         $builder->add(
             'languageCode',

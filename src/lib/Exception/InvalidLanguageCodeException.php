@@ -12,8 +12,10 @@ use InvalidArgumentException;
 
 class InvalidLanguageCodeException extends InvalidArgumentException
 {
-    public function __construct(string $languageCode, string $driver)
-    {
+    public function __construct(
+        string $languageCode,
+        string $driver
+    ) {
         parent::__construct("$languageCode not recognized by $driver");
     }
 }

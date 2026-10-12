@@ -15,7 +15,11 @@ interface ClientInterface
      */
     public function setConfiguration(array $configuration): void;
 
-    public function translate(string $payload, ?string $from, string $to): string;
+    public function translate(
+        string $payload,
+        ?string $from,
+        string $to
+    ): string;
 
     public function supportsLanguage(string $languageCode): bool;
 

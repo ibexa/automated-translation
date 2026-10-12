@@ -11,6 +11,7 @@ namespace Ibexa\AutomatedTranslation;
 use Ibexa\Contracts\Core\Repository\ContentService;
 use Ibexa\Contracts\Core\Repository\ContentTypeService;
 use Ibexa\Contracts\Core\Repository\Values\Content\Content;
+use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Core\MVC\Symfony\Locale\LocaleConverterInterface;
 
 class Translator
@@ -46,8 +47,12 @@ class Translator
     /**
      * @return array<array-key, mixed>
      */
-    public function getTranslatedFields(?string $from, ?string $to, string $remoteServiceKey, Content $content): array
-    {
+    public function getTranslatedFields(
+        ?string $from,
+        ?string $to,
+        string $remoteServiceKey,
+        Content $content
+    ): array {
         $posixFrom = null;
         if (null !== $from) {
             $this->guard->enforceSourceLanguageVersionExist($content, $from);
@@ -64,8 +69,12 @@ class Translator
         return $this->encoder->decode($translatedPayload, $sourceContent);
     }
 
-    public function getTranslatedContent(string $from, string $to, string $remoteServiceKey, Content $content): Content
-    {
+    public function getTranslatedContent(
+        string $from,
+        string $to,
+        string $remoteServiceKey,
+        Content $content
+    ): Content {
         $translatedFields = $this->getTranslatedFields($from, $to, $remoteServiceKey, $content);
 
         $contentDraft = $this->contentService->createContentDraft($content->contentInfo);
@@ -81,7 +90,7 @@ class Translator
                 continue;
             }
 
-            /** @var \Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition $field */
+            /** @var FieldDefinition $field */
             $fieldName = $field->identifier;
             $newValue = $translatedFields[$fieldName] ?? $content->getFieldValue($fieldName);
             $contentUpdateStruct->setField($fieldName, $newValue, $to);

@@ -42,8 +42,10 @@ final class RichTextFieldEncoder implements FieldEncoderInterface, MarkupEncoder
         return $this->richTextEncoder->encode((string) $field->value);
     }
 
-    public function decode(string $value, $previousFieldValue): Value
-    {
+    public function decode(
+        string $value,
+        $previousFieldValue
+    ): Value {
         $decodedValue = $this->richTextEncoder->decode($value);
 
         if (strlen($decodedValue) === 0) {

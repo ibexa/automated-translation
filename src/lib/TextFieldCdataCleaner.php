@@ -21,8 +21,10 @@ final class TextFieldCdataCleaner
     /**
      * @param array<string> $preserveCdataForTypes values of the "type" attribute whose CDATA is markup
      */
-    public function clear(string $payload, array $preserveCdataForTypes): string
-    {
+    public function clear(
+        string $payload,
+        array $preserveCdataForTypes
+    ): string {
         $dom = $this->loadDocument($payload);
         $this->processCdataNodes($dom, $preserveCdataForTypes);
 
@@ -66,8 +68,10 @@ final class TextFieldCdataCleaner
     /**
      * @param array<string> $preserveCdataForTypes
      */
-    private function processCdataNodes(DOMDocument $dom, array $preserveCdataForTypes): void
-    {
+    private function processCdataNodes(
+        DOMDocument $dom,
+        array $preserveCdataForTypes
+    ): void {
         $xpath = new DOMXPath($dom);
         $textNodes = $xpath->query('//text()');
 
@@ -89,8 +93,10 @@ final class TextFieldCdataCleaner
     /**
      * @param array<string> $preserveCdataForTypes
      */
-    private function shouldReplaceCdata(DOMNode $node, array $preserveCdataForTypes): bool
-    {
+    private function shouldReplaceCdata(
+        DOMNode $node,
+        array $preserveCdataForTypes
+    ): bool {
         $parent = $node->parentNode;
         if (!$parent instanceof DOMElement) {
             return false;
@@ -99,8 +105,10 @@ final class TextFieldCdataCleaner
         return !in_array($parent->getAttribute('type'), $preserveCdataForTypes, true);
     }
 
-    private function replaceWithTextNode(DOMDocument $dom, DOMCdataSection $cdataNode): void
-    {
+    private function replaceWithTextNode(
+        DOMDocument $dom,
+        DOMCdataSection $cdataNode
+    ): void {
         $newText = $dom->createTextNode($cdataNode->data);
 
         if ($cdataNode->parentNode !== null) {
