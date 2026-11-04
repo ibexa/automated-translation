@@ -1,14 +1,14 @@
 services:
     ibexa.automated_translation.component.javascripts:
-         parent: Ibexa\AdminUi\Component\TwigComponent
+         parent: Ibexa\TwigComponents\Component\TemplateComponent
          arguments:
              $template: '@@ibexadesign/automated_translation/javascripts.html.twig'
          tags:
-             - { name: ibexa.admin_ui.component, group: 'script-body' }
+             - { name: ibexa.twig.component, group: 'script-body' }
 
     ibexa.automated_translation.component.add_translation_body:
-        parent: Ibexa\AdminUi\Component\TwigComponent
+        parent: Ibexa\TwigComponents\Component\TemplateComponent
         arguments:
             $template: '@@ibexadesign/automated_translation/form_fields.html.twig'
         tags:
-            - { name: ibexa.admin_ui.component, group: 'form-content-add-translation-body' }
+            - { name: ibexa.twig.component, group: 'form-content-add-translation-body' }

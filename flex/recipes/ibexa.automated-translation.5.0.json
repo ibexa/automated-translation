@@ -1,0 +1,15 @@
+{
+    "manifests": {
+        "ibexa/automated-translation": {
+            "manifest": {
+                "bundles": {
+                    "Ibexa\\Bundle\\AutomatedTranslation\\IbexaAutomatedTranslationBundle": ["all"]
+                },
+                "copy-from-package": {
+                    "flex/recipe/config/": "%CONFIG_DIR%/"
+                }
+            },
+            "ref": "896eb1becf32673bd95dbcce2e13368b29a1545e"
+        }
+    }
+}
