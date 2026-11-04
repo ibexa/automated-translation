@@ -1,0 +1,8 @@
+ibexa_automated_translation:
+    system:
+        default:
+            configurations:
+                # google:
+                #     apiKey: "your-google-api-key"
+                deepl:
+                    authKey: "your-deepl-auth-key"

@@ -1,0 +1,12 @@
+{
+    "recipes": {
+        "ibexa/automated-translation": ["5.0"]
+    },
+    "branch": "5.0",
+    "is_contrib": false,
+    "_links": {
+        "repository": "github.com/ibexa/automated-translation",
+        "origin_template": "{package}:{version}@github.com/ibexa/automated-translation:5.0",
+        "recipe_template": "https://raw.githubusercontent.com/ibexa/automated-translation/5.0/flex/recipes/{package_dotted}.{version}.json"
+    }
+}
