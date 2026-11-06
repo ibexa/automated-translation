@@ -11,6 +11,7 @@ namespace Ibexa\Tests\AutomatedTranslation;
 use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\AutomatedTranslation\Encoder\Field\ImageAssetFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\ImageFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
@@ -24,6 +25,7 @@ use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
 use Ibexa\Core\FieldType\Image;
+use Ibexa\Core\FieldType\ImageAsset;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\FieldType\Value;
 use Ibexa\Core\Repository\Values\Content\Content;
@@ -218,6 +220,24 @@ XML;
         self::assertEquals(['field_image' => $expectedImage], $result);
     }
 
+    public function testEncodeDecodeImageAssetTranslatesAlternativeText(): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent(['field_image_asset' => new ImageAsset\Value(42, 'Apples & pears')]);
+
+        $payload = $subject->encode($content);
+
+        $expectedPayload = '<?xml version="1.0"?>
+<response><field_image_asset type="Ibexa\\Core\\FieldType\\ImageAsset\\Value">Apples &amp; pears</field_image_asset></response>
+';
+        self::assertSame($expectedPayload, $payload);
+
+        $translatedPayload = str_replace('Apples &amp; pears', 'Jabłka &amp; gruszki', $payload);
+        $result = $subject->decode($translatedPayload, $content);
+
+        self::assertEquals(['field_image_asset' => new ImageAsset\Value(42, 'Jabłka & gruszki')], $result);
+    }
+
     public function testEncodeRichTextKeepsFakeCdata(): void
     {
         $document = new DOMDocument();
@@ -347,6 +367,7 @@ XML;
                 new TextLineFieldEncoder(),
                 new TextBlockFieldEncoder(),
                 new ImageFieldEncoder(),
+                new ImageAssetFieldEncoder(),
                 new RichTextFieldEncoder(new RichTextEncoder($configResolverMock)),
             ]),
             new TextFieldCdataCleaner()
