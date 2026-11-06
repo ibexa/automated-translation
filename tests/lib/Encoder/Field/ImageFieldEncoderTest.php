@@ -39,11 +39,11 @@ final class ImageFieldEncoderTest extends TestCase
     /**
      * @return iterable<string, array{Value, bool}>
      */
-    public function provideCanEncodeValues(): iterable
+    public static function provideCanEncodeValues(): iterable
     {
-        yield 'image with alternative text' => [$this->createImageValue('A red apple'), true];
-        yield 'image without alternative text' => [$this->createImageValue(null), false];
-        yield 'image with blank alternative text' => [$this->createImageValue('   '), false];
+        yield 'image with alternative text' => [self::createImageValue('A red apple'), true];
+        yield 'image without alternative text' => [self::createImageValue(null), false];
+        yield 'image with blank alternative text' => [self::createImageValue('   '), false];
         yield 'text line' => [new TextLine\Value('A red apple'), false];
     }
 
@@ -60,7 +60,7 @@ final class ImageFieldEncoderTest extends TestCase
     /**
      * @return iterable<string, array{class-string, bool}>
      */
-    public function provideCanDecodeTypes(): iterable
+    public static function provideCanDecodeTypes(): iterable
     {
         yield 'image value' => [Image\Value::class, true];
         yield 'text line value' => [TextLine\Value::class, false];
@@ -68,18 +68,18 @@ final class ImageFieldEncoderTest extends TestCase
 
     public function testEncode(): void
     {
-        $field = $this->createField($this->createImageValue('A red apple & a pear'));
+        $field = $this->createField(self::createImageValue('A red apple & a pear'));
 
         self::assertSame('A red apple & a pear', $this->subject->encode($field));
     }
 
     public function testDecodeReplacesOnlyAlternativeText(): void
     {
-        $previousValue = $this->createImageValue('A red apple');
+        $previousValue = self::createImageValue('A red apple');
 
         $result = $this->subject->decode(' Czerwone jabłko ', $previousValue);
 
-        $expected = $this->createImageValue('Czerwone jabłko');
+        $expected = self::createImageValue('Czerwone jabłko');
         self::assertEquals($expected, $result);
         self::assertNotSame($previousValue, $result);
         self::assertSame('A red apple', $previousValue->alternativeText);
@@ -89,7 +89,7 @@ final class ImageFieldEncoderTest extends TestCase
     {
         $this->expectException(EmptyTranslatedFieldException::class);
 
-        $this->subject->decode('  ', $this->createImageValue('A red apple'));
+        $this->subject->decode('  ', self::createImageValue('A red apple'));
     }
 
     public function testDecodeThrowsWhenPreviousValueIsNotImage(): void
@@ -107,7 +107,7 @@ final class ImageFieldEncoderTest extends TestCase
         ]);
     }
 
-    private function createImageValue(?string $alternativeText): Image\Value
+    private static function createImageValue(?string $alternativeText): Image\Value
     {
         return new Image\Value([
             'id' => '1/2/3/apple.png',
