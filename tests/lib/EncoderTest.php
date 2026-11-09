@@ -11,6 +11,8 @@ namespace Ibexa\Tests\AutomatedTranslation;
 use DOMDocument;
 use Ibexa\AutomatedTranslation\Encoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\FieldEncoderManager;
+use Ibexa\AutomatedTranslation\Encoder\Field\ImageAssetFieldEncoder;
+use Ibexa\AutomatedTranslation\Encoder\Field\ImageFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextBlockFieldEncoder;
 use Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder;
@@ -22,6 +24,8 @@ use Ibexa\Contracts\Core\Repository\Values\Content\Field;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\ContentType;
 use Ibexa\Contracts\Core\Repository\Values\ContentType\FieldDefinition;
 use Ibexa\Contracts\Core\SiteAccess\ConfigResolverInterface;
+use Ibexa\Core\FieldType\Image;
+use Ibexa\Core\FieldType\ImageAsset;
 use Ibexa\Core\FieldType\TextLine;
 use Ibexa\Core\FieldType\Value;
 use Ibexa\Core\Repository\Values\Content\Content;
@@ -190,6 +194,50 @@ XML;
         yield 'mixed' => ['Café <b>& "crème"</b> — Привет'];
     }
 
+    public function testEncodeDecodeImageTranslatesAlternativeText(): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $sourceImage = new Image\Value([
+            'id' => '1/2/3/apple.png',
+            'alternativeText' => 'Apples & pears',
+            'fileName' => 'apple.png',
+            'imageId' => '123-456',
+        ]);
+        $content = $this->createContent(['field_image' => $sourceImage]);
+
+        $payload = $subject->encode($content);
+
+        $expectedPayload = '<?xml version="1.0"?>
+<response><field_image type="Ibexa\\Core\\FieldType\\Image\\Value">Apples &amp; pears</field_image></response>
+';
+        self::assertSame($expectedPayload, $payload);
+
+        $translatedPayload = str_replace('Apples &amp; pears', 'Jabłka &amp; gruszki', $payload);
+        $result = $subject->decode($translatedPayload, $content);
+
+        $expectedImage = clone $sourceImage;
+        $expectedImage->alternativeText = 'Jabłka & gruszki';
+        self::assertEquals(['field_image' => $expectedImage], $result);
+    }
+
+    public function testEncodeDecodeImageAssetTranslatesAlternativeText(): void
+    {
+        $subject = $this->createEncoderWithRealFieldEncoders();
+        $content = $this->createContent(['field_image_asset' => new ImageAsset\Value(42, 'Apples & pears')]);
+
+        $payload = $subject->encode($content);
+
+        $expectedPayload = '<?xml version="1.0"?>
+<response><field_image_asset type="Ibexa\\Core\\FieldType\\ImageAsset\\Value">Apples &amp; pears</field_image_asset></response>
+';
+        self::assertSame($expectedPayload, $payload);
+
+        $translatedPayload = str_replace('Apples &amp; pears', 'Jabłka &amp; gruszki', $payload);
+        $result = $subject->decode($translatedPayload, $content);
+
+        self::assertEquals(['field_image_asset' => new ImageAsset\Value(42, 'Jabłka & gruszki')], $result);
+    }
+
     public function testEncodeRichTextKeepsFakeCdata(): void
     {
         $document = new DOMDocument();
@@ -318,6 +366,8 @@ XML;
             new FieldEncoderManager([
                 new TextLineFieldEncoder(),
                 new TextBlockFieldEncoder(),
+                new ImageFieldEncoder(),
+                new ImageAssetFieldEncoder(),
                 new RichTextFieldEncoder(new RichTextEncoder($configResolverMock)),
             ]),
             new TextFieldCdataCleaner()

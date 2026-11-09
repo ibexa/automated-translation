@@ -13,6 +13,10 @@ services:
 
     Ibexa\AutomatedTranslation\Encoder\Field\TextLineFieldEncoder: ~
 
+    Ibexa\AutomatedTranslation\Encoder\Field\ImageFieldEncoder: ~
+
+    Ibexa\AutomatedTranslation\Encoder\Field\ImageAssetFieldEncoder: ~
+
     Ibexa\AutomatedTranslation\Encoder\Field\RichTextFieldEncoder:
         arguments:
             $richTextEncoder: '@Ibexa\AutomatedTranslation\Encoder\RichText\RichTextEncoder'
